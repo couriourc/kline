@@ -1,0 +1,9 @@
+{
+  "name": "web",
+  "scripts": {
+    "start": "pm2-runtime ./ecosystem.config.cjs"
+  },
+  "dependencies": {
+    "pm2": "^5.4.2"
+  }
+}
