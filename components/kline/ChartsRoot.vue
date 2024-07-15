@@ -11,10 +11,6 @@ const chartRef = ref<HTMLDivElement>();
 
 const cacheFn = new Set<Function>();
 
-function onSubscribeAction() {
-
-}
-
 type Emits = "OnCrosshairChange" |
     "OnTooltipIconClick" |
     "OnZoom" |
@@ -50,24 +46,44 @@ const {chart} = useKlineChart(chartRef, (chart: KLineChart) => {
   const size = chart.getSize();
   dom?.setAttribute("width", (`${size?.width}px`) ?? "");
   dom?.setAttribute("height", (`${size?.height}px`) ?? "");
-  overlays.forEach(registerOverlay);
-  indicators.forEach(registerIndicator);
-  // 配置默认指示器
-  actions.forEach((rawType: ActionType, type: Emits,) => {
-    chart.subscribeAction(rawType, (ev) => {
-      emits(type as any, ev);
-    });
-  });
+  // 预制 Overlay
+  registerOverlays();
+  // 预制 指示器
+  registerIndicators();
+  // 转发 actions
+  subscribeActions();
+  // 触发 onLoad
   cacheFn.forEach(fn => fn(chart));
 });
 useKLineTheme(chart);
 useKlineChartLang();
+
+function registerOverlays() {
+  overlays.forEach(registerOverlay);
+}
+
+function registerIndicators() {
+  indicators.forEach(registerIndicator);
+}
+
+function subscribeActions() {
+  actions.forEach((rawType: ActionType, type: Emits,) => {
+    chart.value!.subscribeAction(rawType, (ev) => {
+      emits(type as any, ev);
+    });
+  });
+}
+
 // Expose
 const exposed: KLineChartsRootRef = {
   get chart() {
     return chart.value as KLineChart;
   },
   onChartLoad(fn) {
+    if (chart.value) {
+      fn(chart.value as KLineChart);
+      return;
+    }
     cacheFn.add(fn);
     return;
   }

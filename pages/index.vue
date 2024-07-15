@@ -5,6 +5,8 @@ import VueSplitter from '@rmp135/vue-splitter';
 import type {MenuOption} from 'naive-ui';
 import {NButton, NCard, NIcon, NLayout, NLayoutSider, NMenu} from "naive-ui";
 import {BookmarkOutline, CaretDownOutline} from '@vicons/ionicons5';
+import overlays, {OVERLAYS_DESCRIPTIONS} from "~/components/kline/extensitons/overlays";
+import {RenderIcon} from "~/components/Icon";
 
 const chartRef = ref<KLineChartsRootRef>();
 
@@ -23,75 +25,15 @@ const limitedPercent = computed({
   }
 });
 
-const menuOptions: MenuOption[] = [
-  {
-    label: '且听风吟',
-    key: 'hear-the-wind-sing',
-    href: 'https://baike.baidu.com/item/%E4%B8%94%E5%90%AC%E9%A3%8E%E5%90%9F/3199'
-  },
-  {
-    label: '1973年的弹珠玩具',
-    key: 'pinball-1973',
-    disabled: true,
-    children: [
-      {
-        label: '鼠',
-        key: 'rat'
-      }
-    ]
-  },
-  {
-    label: '寻羊冒险记',
-    key: 'a-wild-sheep-chase',
-    disabled: true
-  },
-  {
-    label: '舞，舞，舞',
-    key: 'dance-dance-dance',
-    children: [
-      {
-        type: 'group',
-        label: '人物',
-        key: 'people',
-        children: [
-          {
-            label: '叙事者',
-            key: 'narrator'
-          },
-          {
-            label: '羊男',
-            key: 'sheep-man'
-          }
-        ]
-      },
-      {
-        label: '饮品',
-        key: 'beverage',
-        children: [
-          {
-            label: '威士忌',
-            key: 'whisky',
-            href: 'https://baike.baidu.com/item/%E5%A8%81%E5%A3%AB%E5%BF%8C%E9%85%92/2959816?fromtitle=%E5%A8%81%E5%A3%AB%E5%BF%8C&fromid=573&fr=aladdin'
-          }
-        ]
-      },
-      {
-        label: '食物',
-        key: 'food',
-        children: [
-          {
-            label: '三明治',
-            key: 'sandwich'
-          }
-        ]
-      },
-      {
-        label: '过去增多，未来减少',
-        key: 'the-past-increases-the-future-recedes'
-      }
-    ]
-  }
-];
+const menuOptions: MenuOption[] = overlays.map((overlay) => {
+  return {
+    label: OVERLAYS_DESCRIPTIONS[overlay.name as keyof typeof OVERLAYS_DESCRIPTIONS].name,
+    key: overlay.name,
+    onClick() {
+      chartRef.value?.chart?.createOverlay(overlay.name);
+    }
+  };
+});
 const collapsed = ref(true);
 
 function renderMenuLabel(option: MenuOption) {
@@ -105,16 +47,14 @@ function renderMenuLabel(option: MenuOption) {
   return option.label as string;
 }
 
-function renderMenuIcon(option: MenuOption) {
-  // 渲染图标占位符以保持缩进
-  if (option.key === 'sheep-man') return true;
-  // 返回 falsy 值，不再渲染图标及占位符
-  if (option.key === 'food') return null;
-  return h(NIcon, null, {default: () => h(BookmarkOutline)});
+function renderMenuIcon(option: Partial<MenuOption>) {
+  return RenderIcon(() => h(BookmarkOutline), option);
 }
 
-function expandIcon() {
-  return h(NIcon, null, {default: () => h(CaretDownOutline)});
+function expandIcon(item: MenuOption) {
+  return h(NIcon, null, {
+    default: () => h(CaretDownOutline, null)
+  });
 }
 </script>
 
@@ -146,7 +86,7 @@ function expandIcon() {
       <VueSplitter class="bg-transparent" @splitter-click="resize" v-model:percent="limitedPercent"
                    initial-percent="80">
         <template #left-pane>
-          <KlineContextMenu>
+          <KlineContextMenu :menus="menuOptions">
             <template #default="{onContextMenu}">
               <div @contextmenu.prevent="onContextMenu"
                    ref="chartContainerRef"

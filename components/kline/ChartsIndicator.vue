@@ -23,10 +23,8 @@ const create = () =>
 
 
 onMounted(() => {
-  console.log("mounted");
-
   injector.onChartLoad((chart) => {
-
+    create();
   });
 });
 //onUpdated(() => {
