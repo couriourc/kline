@@ -1,9 +1,19 @@
 <script lang="ts" setup>
 import type {MenuOption} from 'naive-ui';
+import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
 
 defineProps<{
   menuOptions: MenuOption[]
 }>();
+const chartRef = ref<KLineChart | null>(null);
+defineExpose<KLineChartsRootRef>({
+  get chart() {
+    return chartRef.value as unknown as KLineChart;
+  },
+  onChartLoad(fn: (chart: KLineChart) => any): void {
+
+  }
+});
 </script>
 <template>
   <KlineContextMenu :menus="menuOptions">

@@ -7,7 +7,7 @@ import {NButton, NCard, NIcon, NLayout, NLayoutSider, NMenu} from "naive-ui";
 import {BookmarkOutline, CaretDownOutline} from '@vicons/ionicons5';
 import overlays, {OVERLAYS_DESCRIPTIONS} from "~/components/kline/extensitons/overlays";
 import {RenderIcon} from "~/components/Icon";
-//import {RenderIcon} from "~/components/Icon";
+import {computed, h, ref, unref} from "vue";
 
 const chartRef = ref<KLineChartsRootRef>();
 
@@ -17,7 +17,7 @@ function resize() {
   console.log(unref(chartRef)?.chart?.resize());
 }
 
-const limitedPercent = computed<number, number>({
+const limitedPercent = computed({
   get() {
     return percent.value;
   },
@@ -31,9 +31,7 @@ const menuOptions: MenuOption[] = overlays.map((overlay) => {
     label: OVERLAYS_DESCRIPTIONS[overlay.name as keyof typeof OVERLAYS_DESCRIPTIONS].name,
     key: overlay.name,
     onClick() {
-      chartRef.value?.chart?.createOverlay(overlay.name);
-      console.log(chartRef.value?.chart?.getVisibleRange());
-
+      console.log(chartRef.value?.chart.chart.createOverlay(overlay.name));
     }
   };
 });
@@ -60,6 +58,7 @@ function expandIcon(item: MenuOption) {
   });
 }
 
+
 </script>
 
 <template>
@@ -81,16 +80,14 @@ function expandIcon(item: MenuOption) {
             :collapsed-width="64"
             :collapsed-icon-size="22"
             :options="menuOptions"
-            :render-label="renderMenuLabel"
-            :render-icon="renderMenuIcon"
-            :expand-icon="expandIcon"
-        />
+        >
+        </n-menu>
       </n-layout-sider>
 
       <VueSplitter class="bg-transparent" @splitter-click="resize" v-model:percent="limitedPercent"
                    initial-percent="80">
         <template #left-pane>
-          <Kline></Kline>
+          <Kline ref="chartRef"></Kline>
         </template>
         <template #right-pane>
           <div class="h-full flex flex-col gap-12px w-full pr-12px  rounded-12px active:shadow-lg duration-100ms">
