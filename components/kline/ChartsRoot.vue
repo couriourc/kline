@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {useKLineTheme} from "~/components/kline/config";
-import {useKlineChart} from "~/components/kline/index";
+import {useKlineChart} from "~/components/kline/core";
 import {useKlineChartLang} from "~/components/kline/lang";
 import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
 import {ActionType, registerIndicator, registerOverlay} from "klinecharts";

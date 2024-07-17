@@ -11,7 +11,7 @@ export default defineNuxtConfig({
         'nuxt-bezier',
         '@nuxtjs/i18n',
         "nuxtjs-naive-ui",
-        "@nuxt/ui"
+        "@nuxt/ui",
     ],
     unocss: {
         nuxtLayers: true,

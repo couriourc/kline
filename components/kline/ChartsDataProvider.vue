@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {injectKlineChart} from "~/components/kline/index";
+import {injectKlineChart} from "~/components/kline/core";
 
 const injector = injectKlineChart();
 injector.onChartLoad((chart) => {

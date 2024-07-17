@@ -3,10 +3,9 @@
 import type {KLineChartsRootRef} from "~/components/kline/type";
 import VueSplitter from '@rmp135/vue-splitter';
 import type {MenuOption} from 'naive-ui';
-import {NButton, NCard, NIcon, NLayout, NLayoutSider, NMenu} from "naive-ui";
+import {NCard, NIcon, NLayout, NLayoutSider, NMenu, NButton} from "naive-ui";
 import {BookmarkOutline, CaretDownOutline} from '@vicons/ionicons5';
 import overlays, {OVERLAYS_DESCRIPTIONS} from "~/components/kline/extensitons/overlays";
-import {RenderIcon} from "~/components/Icon";
 
 const chartRef = ref<KLineChartsRootRef>();
 
@@ -48,7 +47,7 @@ function renderMenuLabel(option: MenuOption) {
 }
 
 function renderMenuIcon(option: Partial<MenuOption>) {
-  return RenderIcon(() => h(BookmarkOutline), option);
+//  return RenderIcon(() => h(BookmarkOutline), option);
 }
 
 function expandIcon(item: MenuOption) {
@@ -86,36 +85,22 @@ function expandIcon(item: MenuOption) {
       <VueSplitter class="bg-transparent" @splitter-click="resize" v-model:percent="limitedPercent"
                    initial-percent="80">
         <template #left-pane>
-          <KlineContextMenu :menus="menuOptions">
-            <template #default="{onContextMenu}">
-              <div @contextmenu.prevent="onContextMenu"
-                   ref="chartContainerRef"
-                   class="w-full box-border h-screen active:shadow-lg duration-100ms overflow-hidden bg-white rounded-12px">
-                <KlineChartsRoot ref="chartRef">
-                  <KlineChartsIndicator name="BOLL"
-                                        :args="{isStack:false}"
-                  />
-                  <KlineChartsIndicator
-                      name="VOL"
-                      :args="{isStack:true}"
-                  />
-                  <KlineChartsDataProvider/>
-                </KlineChartsRoot>
-              </div>
-            </template>
-          </KlineContextMenu>
+          <Kline></Kline>
         </template>
         <template #right-pane>
           <div class="h-full flex flex-col gap-12px w-full pr-12px  rounded-12px active:shadow-lg duration-100ms">
-            <div class="h-48px w-full  active:shadow-lg duration-100ms bg-#FFF rounded-12px">
+            <div class="h-48px w-full flex-center  active:shadow-lg duration-100ms bg-#FFF rounded-12px">
+              <n-button circle>UI
+              </n-button>
             </div>
             <n-card class="h-full w-full rounded-12px">
-              <n-button>asdasd</n-button>
+              <Flow/>
             </n-card>
           </div>
         </template>
       </VueSplitter>
     </n-layout>
+
   </ClientOnly>
 
 </template>

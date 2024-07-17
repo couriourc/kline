@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {injectKlineChart} from "~/components/kline/index";
+import {injectKlineChart} from "~/components/kline/core";
 import type {PaneOptions} from "klinecharts";
 
 const injector = injectKlineChart();
