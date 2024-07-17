@@ -2,8 +2,19 @@
 import {injectKlineChart} from "~/components/kline/core";
 
 const injector = injectKlineChart();
-injector.onChartLoad((chart) => {
-  chart!.applyNewData([
+type KLineData = {
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume?: number;
+  turnover?: number;
+}
+const props = withDefaults(defineProps<{
+  data?: KLineData[]
+}>(), {
+  data: () => [
     {close: 4976.16, high: 4977.99, low: 4970.12, open: 4972.89, timestamp: 1587660000000, volume: 204},
     {close: 4977.33, high: 4979.94, low: 4971.34, open: 4973.20, timestamp: 1587660060000, volume: 194},
     {close: 4977.93, high: 4977.93, low: 4974.20, open: 4976.53, timestamp: 1587660120000, volume: 197},
@@ -14,7 +25,13 @@ injector.onChartLoad((chart) => {
     {close: 4979.31, high: 4979.61, low: 4973.99, open: 4977.06, timestamp: 1587660420000, volume: 35},
     {close: 4977.02, high: 4981.66, low: 4975.14, open: 4981.66, timestamp: 1587660480000, volume: 135},
     {close: 4985.09, high: 4988.62, low: 4980.30, open: 4986.72, timestamp: 1587660540000, volume: 76}
-  ]);
+  ]
+});
+injector.onChartLoad((chart) => {
+  chart!.applyNewData(props.data);
+});
+onUpdated(() => {
+  injector.chart!.applyNewData(props.data);
 });
 </script>
 <template></template>

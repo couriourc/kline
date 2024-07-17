@@ -16,7 +16,7 @@
     "@rmp135/vue-splitter": "^2.0.2",
     "@vicons/ionicons5": "^0.12.0",
     "@vue-flow/core": "^1.39.0",
-    "klinecharts": "^9.8.10",
+    "klinecharts": "workspace:^",
     "nuxt": "^3.12.3",
     "nuxtjs-naive-ui": "^1.0.2",
     "vicons": "^0.0.1",

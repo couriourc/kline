@@ -3,9 +3,11 @@
 import type {KLineChartsRootRef} from "~/components/kline/type";
 import VueSplitter from '@rmp135/vue-splitter';
 import type {MenuOption} from 'naive-ui';
-import {NCard, NIcon, NLayout, NLayoutSider, NMenu, NButton} from "naive-ui";
+import {NButton, NCard, NIcon, NLayout, NLayoutSider, NMenu} from "naive-ui";
 import {BookmarkOutline, CaretDownOutline} from '@vicons/ionicons5';
 import overlays, {OVERLAYS_DESCRIPTIONS} from "~/components/kline/extensitons/overlays";
+import {RenderIcon} from "~/components/Icon";
+//import {RenderIcon} from "~/components/Icon";
 
 const chartRef = ref<KLineChartsRootRef>();
 
@@ -15,11 +17,11 @@ function resize() {
   console.log(unref(chartRef)?.chart?.resize());
 }
 
-const limitedPercent = computed({
+const limitedPercent = computed<number, number>({
   get() {
     return percent.value;
   },
-  set(val) {
+  set(val: number) {
     percent.value = Math.max(70, Math.min(90, val));
   }
 });
@@ -30,6 +32,8 @@ const menuOptions: MenuOption[] = overlays.map((overlay) => {
     key: overlay.name,
     onClick() {
       chartRef.value?.chart?.createOverlay(overlay.name);
+      console.log(chartRef.value?.chart?.getVisibleRange());
+
     }
   };
 });
@@ -47,7 +51,7 @@ function renderMenuLabel(option: MenuOption) {
 }
 
 function renderMenuIcon(option: Partial<MenuOption>) {
-//  return RenderIcon(() => h(BookmarkOutline), option);
+  return RenderIcon(() => h(BookmarkOutline), option);
 }
 
 function expandIcon(item: MenuOption) {
@@ -55,6 +59,7 @@ function expandIcon(item: MenuOption) {
     default: () => h(CaretDownOutline, null)
   });
 }
+
 </script>
 
 <template>
@@ -100,7 +105,6 @@ function expandIcon(item: MenuOption) {
         </template>
       </VueSplitter>
     </n-layout>
-
   </ClientOnly>
 
 </template>

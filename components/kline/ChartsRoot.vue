@@ -6,6 +6,7 @@ import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
 import {ActionType, registerIndicator, registerOverlay} from "klinecharts";
 import overlays from "~/components/kline/extensitons/overlays";
 import indicators from "~/components/kline/extensitons/indicators";
+import IndicatorPane from "~/external/KLineChart/src/pane/IndicatorPane";
 
 const chartRef = ref<HTMLDivElement>();
 
