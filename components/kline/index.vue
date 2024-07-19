@@ -8,7 +8,7 @@ defineProps<{
 const chartRef = ref<KLineChart | null>(null);
 defineExpose<KLineChartsRootRef>({
   get chart() {
-    return chartRef.value as unknown as KLineChart;
+    return chartRef.value.chart as unknown as KLineChart;
   },
   onChartLoad(fn: (chart: KLineChart) => any): void {
 
@@ -18,18 +18,13 @@ defineExpose<KLineChartsRootRef>({
 <template>
   <KlineContextMenu :menus="menuOptions">
     <template #default="{onContextMenu}">
-      <div @contextmenu.prevent="onContextMenu"
+      <div @contextmenu.prevent.stop="onContextMenu"
            ref="chartContainerRef"
            v-bind="$attrs"
            class="w-full box-border h-screen active:shadow-lg duration-100ms overflow-hidden bg-white rounded-12px">
         <KlineChartsRoot ref="chartRef">
-          <KlineChartsIndicator name="BOLL"
-                                :args="{isStack:false}"
-          />
-          <KlineChartsIndicator
-              name="VOL"
-              :args="{isStack:true}"
-          />
+          <KlineChartsIndicator name="BOLL" :args="{isStack:false}"/>
+          <KlineChartsIndicator name="VOL" :args="{isStack:true}"/>
           <KlineChartsDataProvider/>
         </KlineChartsRoot>
       </div>

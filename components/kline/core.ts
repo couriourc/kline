@@ -1,4 +1,4 @@
-import {type Chart, dispose, FormatDateType, init, utils} from "klinecharts";
+import {dispose, FormatDateType, init, utils} from "klinecharts";
 import type {Ref} from "vue";
 import {useKLineStore} from "~/components/kline/store";
 import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
@@ -38,8 +38,21 @@ function formatDate(dateTimeFormat: Intl.DateTimeFormat, timestamp: number, form
     return utils.formatDate(dateTimeFormat, timestamp, 'YYYY-MM-DD HH:mm');
 }
 
+
+const _run_on_charts_listeners = new Set<Function>();
+const memo: KLineChartsRootRef = {
+    chart: undefined,
+    onChartLoad(fn: (chart: KLineChart) => any): void {
+        _run_on_charts_listeners.add(fn);
+    },
+    removeChartLoad(fn: (chart: KLineChart) => any) {
+        return _run_on_charts_listeners.delete(fn);
+    }
+
+};
+
 export function useKlineChart(chartDomRef: Ref<HTMLElement | undefined>, onLoaded?: (chart: KLineChart) => any) {
-    let chart: Ref<Chart | undefined> = ref<Chart>();
+    let chart: Ref<KLineChart | undefined> = ref<KLineChart>();
     const width = useWindowSize();
     // 初始化
     onMounted(async () => {
@@ -51,6 +64,8 @@ export function useKlineChart(chartDomRef: Ref<HTMLElement | undefined>, onLoade
         (chart.value as KLineChart).use = (fn) => {
             fn?.(chart.value as KLineChart);
         };
+        memo.chart = chart.value!;
+        _run_on_charts_listeners.forEach((fn) => fn(chart.value));
         onLoaded?.(chart.value as KLineChart);
     });
 
@@ -69,6 +84,10 @@ export function useKlineChart(chartDomRef: Ref<HTMLElement | undefined>, onLoade
         chart
     };
 }
+
+export const useKlineChartMemo = () => {
+    return memo;
+};
 
 export function injectKlineChart() {
     const injector = inject<KLineChartsRootRef>("klinechart");

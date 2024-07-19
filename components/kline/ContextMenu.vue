@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 
-import {type MenuOption, NIcon, NMenu} from "naive-ui";
-import type {Component} from "vue";
+import {NMenu} from "naive-ui";
+import {ref, unref} from "vue";
+import {type MenuOption} from "../ui/types/index";
 
 const virtualElement = ref({getBoundingClientRect: () => ({})});
 const chartContainerRef = ref<HTMLElement>();
@@ -22,13 +23,11 @@ function onContextMenu() {
   });
 
   isOpen.value = true;
+  console.log("Context");
 }
 
 const defaultExpandedKeys = ['fish', 'braise'];
 
-const renderIcon = (icon: Component) => {
-  return () => h(NIcon, null, {default: () => h(icon)});
-};
 
 const menuOptions: MenuOption[] = [];
 defineProps<{
@@ -38,10 +37,16 @@ defineProps<{
 
 </script>
 <template>
-  <UContextMenu v-model="isOpen" :virtual-element="virtualElement">
+  <UContextMenu v-model="isOpen"
+                :virtual-element="virtualElement"
+                :popper="{strategy: 'fixed',gpuAcceleration:true}"
+                z-10000 h-120px
+  >
     <n-menu
+        class="h-200px overflow-y-auto"
+
         :options="menus"
-        :default-expanded-keys="defaultExpandedKeys"
+        :render-icon="()=>''"
         accordion
     />
   </UContextMenu>

@@ -1,6 +1,10 @@
 import type {Chart} from "klinecharts";
 
-export type KLineChartsRootRef = { chart?: KLineChart, onChartLoad(fn: (chart: KLineChart) => any): void; }
+export type KLineChartsRootRef = {
+    chart?: KLineChart,
+    onChartLoad(fn: (chart: KLineChart) => any): void;
+    removeChartLoad?: (fn: (chart: KLineChart) => any) => any
+}
 export type KLineFigureTypes = string & ("arc" | "circle" | "line" | "polygon" | "rect" | "text" | "rectText");
 
 interface IKLineFigureAttrsMap {

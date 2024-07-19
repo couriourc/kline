@@ -46,5 +46,16 @@ export default defineNuxtConfig({
     },
     css: [
         '~/assets/scss/reset.scss'
-    ]
+    ],
+    icon: {
+        mode: 'css',
+        provider: 'iconify',
+        serverBundle: false,
+        customCollections: [
+            {
+                prefix: 'my-icon',
+                dir: './assets/icons'
+            }
+        ]
+    }
 });
