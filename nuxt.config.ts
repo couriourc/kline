@@ -12,6 +12,10 @@ export default defineNuxtConfig({
         "nuxtjs-naive-ui",
         "@nuxt/ui",
     ],
+    ui: {
+        icons: ['heroicons', 'simple-icons'],
+        safelistColors: ['primary', 'red', 'orange', 'green']
+    },
     vite: {
         vue: {
             customElement: true
@@ -19,9 +23,10 @@ export default defineNuxtConfig({
         vueJsx: {
             mergeProps: true
         },
-    },
-    unocss: {
-        nuxtLayers: true,
+        optimizeDeps: {
+            exclude: ['@iconify/vue'],
+            include: ['klinecharts', 'vue3-easy-data-table', 'underscore']
+        },
     },
     runtimeConfig: {
         public: {
@@ -31,12 +36,13 @@ export default defineNuxtConfig({
     },
     tailwindcss: {
         mode: 'jit',
-        quiet: false,
+        quiet: true,
         corePlugins: {
             preflight: false,
         },
         viewer: false,
     },
+    unocss: {},
     imports: {
         autoImport: true,
         scan: false
@@ -55,9 +61,19 @@ export default defineNuxtConfig({
     },
     build: {
         transpile: ['klinecharts'],
-        optimizeDeps: {
-            include: ['klinecharts', 'vue3-easy-data-table', '@iconify/vue', 'underscore']
-        },
+    },
+    app: {
+        head: {
+            "meta": [
+                {
+                    "name": "viewport",
+                    "content": "width=device-width, initial-scale=1"
+                },
+                {
+                    "charset": "utf-8"
+                }
+            ],
+        }
     },
     css: [
         '~/assets/scss/reset.scss'
@@ -72,5 +88,14 @@ export default defineNuxtConfig({
                 dir: './assets/icons'
             }
         ]
-    }
+    },
+    colorMode: {
+        disableTransition: true
+    },
+    future: {
+        compatibilityVersion: 4
+    },
+    typescript: {
+        strict: false
+    },
 });

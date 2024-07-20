@@ -10,9 +10,12 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@devui-design/icons": "^1.4.0",
     "@iconify-json/carbon": "^1.1.36",
+    "@iconify-json/simple-icons": "^1.1.109",
     "@nuxt/kit": "^3.12.3",
     "@nuxt/ui": "^2.17.0",
+    "@nuxt/ui-pro": "^1.3.1",
     "@preact/signals-core": "^1.7.0",
     "@rmp135/vue-splitter": "^2.0.2",
     "@vicons/ionicons5": "^0.12.0",
@@ -23,6 +26,7 @@
     "underscore": "^1.13.6",
     "vicons": "^0.0.1",
     "vue": "latest",
+    "vue-devui": "^1.6.21",
     "vue3-easy-data-table": "^1.5.47"
   },
   "devDependencies": {
