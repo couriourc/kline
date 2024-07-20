@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 
 import {NMenu} from "naive-ui";
-import {ref, unref} from "vue";
+import {ref, unref,} from "vue";
 import {type MenuOption} from "../ui/types/index";
+import {useElementSize, useMouse, useWindowScroll} from "#imports";
 
 const virtualElement = ref({getBoundingClientRect: () => ({})});
 const chartContainerRef = ref<HTMLElement>();

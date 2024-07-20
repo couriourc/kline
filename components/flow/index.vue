@@ -1,38 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Node, Edge } from '@vue-flow/core'
-import { VueFlow } from '@vue-flow/core'
-
-// these components are only shown as examples of how to use a custom node or edge
-// you can find many examples of how to create these custom components in the examples page of the docs
-//import SpecialNode from './components/SpecialNode.vue'
-//import SpecialEdge from './components/SpecialEdge.vue'
-
+import {ref} from 'vue';
+import type {Edge, Node} from '@vue-flow/core';
+import {VueFlow} from '@vue-flow/core';
+import "@vue-flow/core/dist/style.css";
 // these are our nodes
 const nodes = ref<Node[]>([
   // an input node, specified by using `type: 'input'`
   {
     id: '1',
     type: 'input',
-    position: { x: 250, y: 5 },
+    position: {x: 250, y: 5},
     // all nodes can have a data object containing any data you want to pass to the node
     // a label can property can be used for default nodes
-    data: { label: 'Node 1' },
+    data: {label: 'Node 1'},
   },
 
   // default node, you can omit `type: 'default'` as it's the fallback type
   {
     id: '2',
-    position: { x: 100, y: 100 },
-    data: { label: 'Node 2' },
+    position: {x: 100, y: 100},
+    data: {label: 'Node 2'},
   },
 
   // An output node, specified by using `type: 'output'`
   {
     id: '3',
     type: 'output',
-    position: { x: 400, y: 200 },
-    data: { label: 'Node 3' },
+    position: {x: 400, y: 200},
+    data: {label: 'Node 3'},
   },
 
   // this is a custom node
@@ -41,13 +36,13 @@ const nodes = ref<Node[]>([
   {
     id: '4',
     type: 'special', // <-- this is the custom node type name
-    position: { x: 400, y: 200 },
+    position: {x: 400, y: 200},
     data: {
       label: 'Node 4',
       hello: 'world',
     },
   },
-])
+]);
 
 // these are our edges
 const edges = ref<Edge[]>([
@@ -80,20 +75,20 @@ const edges = ref<Edge[]>([
       hello: 'world',
     }
   },
-])
+]);
 </script>
 
 <template>
   <VueFlow :nodes="nodes" :edges="edges">
     <!-- bind your custom node type to a component by using slots, slot names are always `node-<type>` -->
-<!--    <template #node-special="specialNodeProps">-->
-<!--      <SpecialNode v-bind="specialNodeProps" />-->
-<!--    </template>-->
+    <!--    <template #node-special="specialNodeProps">-->
+    <!--      <SpecialNode v-bind="specialNodeProps" />-->
+    <!--    </template>-->
 
     <!-- bind your custom edge type to a component by using slots, slot names are always `edge-<type>` -->
-<!--    <template #edge-special="specialEdgeProps">-->
-<!--      <SpecialEdge v-bind="specialEdgeProps" />-->
-<!--    </template>-->
+    <!--    <template #edge-special="specialEdgeProps">-->
+    <!--      <SpecialEdge v-bind="specialEdgeProps" />-->
+    <!--    </template>-->
   </VueFlow>
 </template>
 

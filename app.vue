@@ -7,10 +7,8 @@ const config = useRuntimeConfig();
 <template>
   <NuxtRouteAnnouncer/>
   <NuxtLayout>
-    <ConfigProvider>
-      <NConfigProvider>
-        <NuxtPage></NuxtPage>
-      </NConfigProvider>
-    </ConfigProvider>
+    <NConfigProvider>
+      <NuxtPage></NuxtPage>
+    </NConfigProvider>
   </NuxtLayout>
 </template>

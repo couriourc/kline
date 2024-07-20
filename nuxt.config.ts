@@ -6,13 +6,20 @@ export default defineNuxtConfig({
         '@unocss/nuxt',
         '@pinia/nuxt',
         '@vueuse/nuxt',
-        'radix-vue/nuxt',
         'nuxt-swiper',
         'nuxt-bezier',
         '@nuxtjs/i18n',
         "nuxtjs-naive-ui",
         "@nuxt/ui",
     ],
+    vite: {
+        vue: {
+            customElement: true
+        },
+        vueJsx: {
+            mergeProps: true
+        },
+    },
     unocss: {
         nuxtLayers: true,
     },
@@ -22,16 +29,21 @@ export default defineNuxtConfig({
             apiSecret: '', // can be overridden by NUXT_API_SECRET environment variable
         }
     },
+    tailwindcss: {
+        mode: 'jit',
+        quiet: false,
+        corePlugins: {
+            preflight: false,
+        },
+        viewer: false,
+    },
+    imports: {
+        autoImport: true,
+        scan: false
+    },
     i18n: {
         langDir: './locales',
         locales: [
-            {
-                code: 'en-GB',
-                dir: 'ltr',
-                file: 'en-GB.json',
-                name: 'English',
-                flag: 'gb',
-            },
             {
                 code: 'zh',
                 dir: 'ltr',
@@ -42,7 +54,10 @@ export default defineNuxtConfig({
         ]
     },
     build: {
-        transpile: ['klinecharts']
+        transpile: ['klinecharts'],
+        optimizeDeps: {
+            include: ['klinecharts', 'vue3-easy-data-table', '@iconify/vue', 'underscore']
+        },
     },
     css: [
         '~/assets/scss/reset.scss'

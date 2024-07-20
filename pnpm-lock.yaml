@@ -29,9 +29,6 @@ importers:
       '@vue-flow/core':
         specifier: ^1.39.0
         version: 1.39.0(vue@3.4.31)
-      ag-grid-community:
-        specifier: ^32.0.2
-        version: 32.0.2
       klinecharts:
         specifier: workspace:^
         version: link:external/KLineChart
@@ -50,6 +47,9 @@ importers:
       vue:
         specifier: latest
         version: 3.4.31(typescript@4.9.5)
+      vue3-easy-data-table:
+        specifier: ^1.5.47
+        version: 1.5.47(typescript@4.9.5)
     devDependencies:
       '@nuxtjs/i18n':
         specifier: ^8.3.1
@@ -3521,7 +3521,6 @@ packages:
       entities: 4.5.0
       estree-walker: 2.0.2
       source-map-js: 1.2.0
-    dev: true
 
   /@vue/compiler-dom@3.4.31:
     resolution: {integrity: sha512-wK424WMXsG1IGMyDGyLqB+TbmEBFM78hIsOJ9QwUVLGrcSk0ak6zYty7Pj8ftm7nEtdU/DGQxAXp0/lM/2cEpQ==}
@@ -3534,7 +3533,6 @@ packages:
     dependencies:
       '@vue/compiler-core': 3.4.33
       '@vue/shared': 3.4.33
-    dev: true
 
   /@vue/compiler-sfc@3.4.31:
     resolution: {integrity: sha512-einJxqEw8IIJxzmnxmJBuK2usI+lJonl53foq+9etB2HAzlPjAS/wa7r0uUpXw5ByX3/0uswVSrjNb17vJm1kQ==}
@@ -3561,7 +3559,6 @@ packages:
       magic-string: 0.30.10
       postcss: 8.4.39
       source-map-js: 1.2.0
-    dev: true
 
   /@vue/compiler-ssr@3.4.31:
     resolution: {integrity: sha512-RtefmITAje3fJ8FSg1gwgDhdKhZVntIVbwupdyZDSifZTRMiWxWehAOTCc8/KZDnBOcYQ4/9VWxsTbd3wT0hAA==}
@@ -3574,7 +3571,6 @@ packages:
     dependencies:
       '@vue/compiler-dom': 3.4.33
       '@vue/shared': 3.4.33
-    dev: true
 
   /@vue/devtools-api@6.6.3:
     resolution: {integrity: sha512-0MiMsFma/HqA6g3KLKn+AGpL1kgKhFWszC9U29NfpWK5LE7bjeXxySWJrOJ77hBz+TBrBQ7o4QJqbPbqbs8rJw==}
@@ -3659,7 +3655,6 @@ packages:
     resolution: {integrity: sha512-B24QIelahDbyHipBgbUItQblbd4w5HpG3KccL+YkGyo3maXyS253FzcTR3pSz739OTphmzlxP7JxEMWBpewilA==}
     dependencies:
       '@vue/shared': 3.4.33
-    dev: true
 
   /@vue/runtime-core@3.4.31:
     resolution: {integrity: sha512-LDkztxeUPazxG/p8c5JDDKPfkCDBkkiNLVNf7XZIUnJ+66GVGkP+TIh34+8LtPisZ+HMWl2zqhIw0xN5MwU1cw==}
@@ -3672,7 +3667,6 @@ packages:
     dependencies:
       '@vue/reactivity': 3.4.33
       '@vue/shared': 3.4.33
-    dev: true
 
   /@vue/runtime-dom@3.4.31:
     resolution: {integrity: sha512-2Auws3mB7+lHhTFCg8E9ZWopA6Q6L455EcU7bzcQ4x6Dn4cCPuqj6S2oBZgN2a8vJRS/LSYYxwFFq2Hlx3Fsaw==}
@@ -3689,7 +3683,6 @@ packages:
       '@vue/runtime-core': 3.4.33
       '@vue/shared': 3.4.33
       csstype: 3.1.3
-    dev: true
 
   /@vue/server-renderer@3.4.31(vue@3.4.31):
     resolution: {integrity: sha512-D5BLbdvrlR9PE3by9GaUp1gQXlCNadIZytMIb8H2h3FMWJd4oUfkUTEH2wAr3qxoRz25uxbTcbqd3WKlm9EHQA==}
@@ -3708,14 +3701,12 @@ packages:
       '@vue/compiler-ssr': 3.4.33
       '@vue/shared': 3.4.33
       vue: 3.4.33(typescript@4.9.5)
-    dev: true
 
   /@vue/shared@3.4.31:
     resolution: {integrity: sha512-Yp3wtJk//8cO4NItOPpi3QkLExAr/aLBGZMmTtW9WpdwBCJpRM6zj9WgWktXAl8IDIozwNMByT45JP3tO3ACWA==}
 
   /@vue/shared@3.4.33:
     resolution: {integrity: sha512-aoRY0jQk3A/cuvdkodTrM4NMfxco8n55eG4H7ML/CRy7OryHfiqvug4xrCBBMbbN+dvXAetDDwZW9DXWWjBntA==}
-    dev: true
 
   /@vueuse/core@10.11.0(vue@3.4.31):
     resolution: {integrity: sha512-x3sD4Mkm7PJ+pcq3HX8PLPBadXCAlSDR/waK87dz0gQE+qJnaaFhc/dZVfJz+IUYzTMVGum2QlR7ImiJQN4s6g==}
@@ -4026,6 +4017,7 @@ packages:
 
   /ag-charts-types@10.0.2:
     resolution: {integrity: sha512-Nxo5slHOXlaeg0gRIsVnovAosQzzlYfWJtdDy0Aq/VvpJru/PJ+5i2c9aCyEhgRxhBjImsoegwkgRj7gNOWV6Q==}
+    dev: true
 
   /ag-grid-community@31.3.4:
     resolution: {integrity: sha512-jOxQO86C6eLnk1GdP24HB6aqaouFzMWizgfUwNY5MnetiWzz9ZaAmOGSnW/XBvdjXvC5Fpk3gSbvVKKQ7h9kBw==}
@@ -4035,6 +4027,7 @@ packages:
     resolution: {integrity: sha512-vLJJUjnsG9hNK41GNuW2EHu1W264kxA/poOpcX4kmyrjU5Uzvelsbj3HdKAO9POV28iqyRdKGYfAWdn8QzA7KA==}
     dependencies:
       ag-charts-types: 10.0.2
+    dev: true
 
   /ag-grid-vue3@32.0.2(typescript@4.9.5):
     resolution: {integrity: sha512-tFpmDCh3hZVEyu9bsHjgOw4VC5ic4g49s252F2RK17loXfcXnR9e2U0WTAU2laiOqRqJM5iPjf+YauwxU/urgw==}
@@ -12362,6 +12355,14 @@ packages:
       vue: 3.4.31(typescript@4.9.5)
     dev: true
 
+  /vue3-easy-data-table@1.5.47(typescript@4.9.5):
+    resolution: {integrity: sha512-q0bZBlWIwQ3FIhB+F98ylFPfBJWiS3Xv7QqBe3xS5MbRNZP96RFjaQn7C0Pi0J/aaucNW8gFWxPyh9NESS1ehw==}
+    dependencies:
+      vue: 3.4.33(typescript@4.9.5)
+    transitivePeerDependencies:
+      - typescript
+    dev: false
+
   /vue@3.4.31(typescript@4.9.5):
     resolution: {integrity: sha512-njqRrOy7W3YLAlVqSKpBebtZpDVg21FPoaq1I7f/+qqBThK9ChAIjkRWgeP6Eat+8C+iia4P3OYqpATP21BCoQ==}
     peerDependencies:
@@ -12391,7 +12392,6 @@ packages:
       '@vue/server-renderer': 3.4.33(vue@3.4.33)
       '@vue/shared': 3.4.33
       typescript: 4.9.5
-    dev: true
 
   /vueuc@0.4.58(vue@3.4.31):
     resolution: {integrity: sha512-Wnj/N8WbPRSxSt+9ji1jtDHPzda5h2OH/0sFBhvdxDRuyCZbjGg3/cKMaKqEoe+dErTexG2R+i6Q8S/Toq1MYg==}

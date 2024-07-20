@@ -2,8 +2,10 @@
 import {ref} from 'vue';
 import type {MenuOption} from '~/components/ui/types/index.js';
 import {useKlineChartMemo} from "~/components/kline/core";
-
 import {NLayout, NLayoutSider} from "naive-ui";
+import {useLocalePath} from "#i18n";
+
+const localePath = useLocalePath();
 
 const collapsed = ref(true);
 
@@ -12,30 +14,29 @@ const chartMemo = useKlineChartMemo();
 const menuOptions: MenuOption[] = [
   {
     label: '绘图',
-    icon: 'carbon:4k-filled',
-    key: '/zh',
-    onClick() {
-      navigateTo('/zh');
-    },
+    iconName: 'carbon:4k-filled',
+    key: '/',
+    href: localePath('/', 'zh')
   },
   {
     label: '数据表',
-    icon: 'carbon:table-split',
-    key: '/zh/dataset',
-    onClick() {
-      navigateTo('/zh/dataset');
-    }
-  }];
-
-function handleSelectMenuItem(option: MenuOption) {
-  option.onClick?.(option);
-}
+    iconName: 'carbon:table-split',
+    key: '/dataset',
+    href: localePath('/dataset', 'zh')
+  },
+  {
+    label: 'Flow',
+    iconName: 'carbon:decision-node',
+    key: '/flow',
+    href: localePath('/flow', 'zh'),
+  },
+];
+//<Icon icon="" />
 </script>
 <template>
   <ClientOnly>
 
     <n-layout has-sider class="bg-black/5">
-
       <n-layout-sider
           bordered
           collapse-mode="width"
@@ -52,10 +53,12 @@ function handleSelectMenuItem(option: MenuOption) {
             :menu-options="menuOptions"
         >
           <template #render-icon="option">
-            <ui-icon @click="handleSelectMenuItem(option)" :icon="option.icon"></ui-icon>
+            <RouterLink v-if="option.href" :to="option.href">
+              <ui-icon @click="option.onClick?.(option)" :icon="option.iconName"></ui-icon>
+            </RouterLink>
           </template>
           <template #render-label="option">
-            <span @click="handleSelectMenuItem(option)"> {{ option.label ?? '未命名' }}</span>
+            <RouterLink v-if="option.href" :to="option.href"> asd{{ option.label ?? '未命名' }}</RouterLink>
           </template>
         </ui-menu>
       </n-layout-sider>

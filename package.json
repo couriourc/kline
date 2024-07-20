@@ -17,13 +17,13 @@
     "@rmp135/vue-splitter": "^2.0.2",
     "@vicons/ionicons5": "^0.12.0",
     "@vue-flow/core": "^1.39.0",
-    "ag-grid-community": "^32.0.2",
     "klinecharts": "workspace:^",
     "nuxt": "^3.12.3",
     "nuxtjs-naive-ui": "^1.0.2",
     "underscore": "^1.13.6",
     "vicons": "^0.0.1",
-    "vue": "latest"
+    "vue": "latest",
+    "vue3-easy-data-table": "^1.5.47"
   },
   "devDependencies": {
     "@nuxtjs/i18n": "^8.3.1",

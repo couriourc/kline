@@ -4,9 +4,9 @@
       :collapsed-width="64"
       :collapsed-icon-size="22"
       :options="menuOptions"
-      :render-icon="_.isString(slots['render-icon'])? '':slots['render-icon']"
+      :render-icon="_.isString(slots['render-icon'])? null:slots['render-icon']"
       :render-label="slots['render-label']"
-      :expand-icon="slots['expand-icon']"
+      :expand-icon="_.isString(slots['expand-icon'])?null:slots['expand-icon']"
   />
 </template>
 <script setup lang="ts">
@@ -20,9 +20,9 @@ defineProps<{
   menuOptions: MenuOption[]
 }>();
 const slots = defineSlots<{
-  'render-icon': (option: MenuOption) => VNode,
-  'render-label': (option: MenuOption) => VNode,
-  'expand-icon': (option: MenuOption) => VNode,
+  'render-icon': ((option: MenuOption) => VNode) | string,
+  'render-label': ((option: MenuOption) => VNode) | string,
+  'expand-icon': ((option: MenuOption) => VNode) | string,
 }>();
 
 //console.log()
