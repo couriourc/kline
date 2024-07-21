@@ -3,6 +3,23 @@
 import {ref, unref,} from "vue";
 import {type MenuOption} from "../ui/types/index";
 import {useElementSize, useMouse, useWindowScroll} from "#imports";
+import {defineShortcuts} from "#ui/composables/defineShortcuts";
+
+
+
+defineProps<{
+  menus: MenuOption[]
+}>();
+
+defineShortcuts({
+  shift_a: {
+    usingInput: true,
+    handler: () => {
+      onContextMenu();
+    }
+  }
+});
+
 
 const virtualElement = ref({getBoundingClientRect: () => ({})});
 const chartContainerRef = ref<HTMLElement>();
@@ -14,7 +31,6 @@ const {y: windowY} = useWindowScroll();
 function onContextMenu() {
   const top = unref(y) - unref(windowY);
   const left = unref(x);
-
   virtualElement.value.getBoundingClientRect = () => ({
     width: 0,
     height: 0,
@@ -23,16 +39,7 @@ function onContextMenu() {
   });
 
   isOpen.value = true;
-  console.log("Context");
 }
-
-const defaultExpandedKeys = ['fish', 'braise'];
-
-
-const menuOptions: MenuOption[] = [];
-defineProps<{
-  menus: MenuOption[]
-}>();
 
 const people = [
   {id: 1, label: 'Wade Cooper'},
@@ -47,7 +54,6 @@ const people = [
   {id: 10, label: 'Emil Schaefer'}
 ];
 const selected = ref([people[3]]);
-
 
 const ui = {
   wrapper: 'flex flex-col flex-1 min-h-0 divide-y divide-gray-200 dark:divide-gray-700 bg-gray-50 dark:bg-gray-800',
@@ -69,6 +75,12 @@ const ui = {
     }
   }
 };
+const closeButton = {
+  icon: 'i-heroicons-x-mark-20-solid',
+  color: 'gray',
+  padded: false,
+  onClick: () => isOpen.value = false,
+};
 </script>
 <template>
   <UContextMenu v-model="isOpen"
@@ -84,7 +96,7 @@ const ui = {
         :groups="[{ key: 'people', commands: people }]"
         :ui="ui"
         :fuse="{ resultLimit: 6, fuseOptions: { threshold: 0.1 } }"
-        :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link', padded: false }"
+        :close-button="closeButton"
     />
   </UContextMenu>
 

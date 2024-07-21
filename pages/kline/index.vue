@@ -31,7 +31,7 @@
               </u-dropdown>
             </div>
             <div class="header h-full bg-white">
-              <grid-table></grid-table>
+              <lazy-grid-table></lazy-grid-table>
             </div>
           </div>
 

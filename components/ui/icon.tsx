@@ -21,7 +21,7 @@ export default defineComponent({
                 (() => {
                     if (_.isString(props.icon)) {
                         if (props.icon.includes(':')) {
-                            return <div><Icon {...attrs} icon={props.icon} {...attrs}/></div>;
+                            return <Icon {...attrs} icon={props.icon} {...attrs}/>;
                         } else {
                             return <d-icon {...attrs} name={props.icon} v-slots={slots}>
                             </d-icon>;

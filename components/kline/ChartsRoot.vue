@@ -3,10 +3,8 @@ import {useKLineTheme} from "~/components/kline/config";
 import {useKlineChart} from "~/components/kline/core";
 import {useKlineChartLang} from "~/components/kline/lang";
 import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
-import {ActionType, registerIndicator, registerOverlay} from "klinecharts";
-import overlays from "~/components/kline/extensitons/overlays";
-import indicators from "~/components/kline/extensitons/indicators";
-import IndicatorPane from "~/external/KLineChart/src/pane/IndicatorPane";
+import {ActionType} from "klinecharts";
+import * as fabric from 'fabric';
 
 const chartRef = ref<HTMLDivElement>();
 
@@ -47,25 +45,37 @@ const {chart} = useKlineChart(chartRef, (chart: KLineChart) => {
   const size = chart.getSize();
   dom?.setAttribute("width", (`${size?.width}px`) ?? "");
   dom?.setAttribute("height", (`${size?.height}px`) ?? "");
-  // 预制 Overlay
-  registerOverlays();
-  // 预制 指示器
-  registerIndicators();
   // 转发 actions
   subscribeActions();
+  ((chart as any).getAllDrawPanes)?.().map(item => {
+        const canvas = item.getMainWidget().getMainCanvas();
+        if (canvas) {
+          console.log(canvas);
+          const old_canvas = canvas.getElement().cloneNode(true);
+          const old_father = canvas.getElement();
+          console.log(old_father.parentNode.appendChild(old_canvas));
+          const old_size = old_canvas.getBoundingClientRect();
+          const ctx = new fabric.Canvas(old_canvas, {
+            width: old_size.width,
+            height: old_size.height,
+          });
+          const text = new fabric.Text('hello world', {left: 900, top: 100});
+          const comicSansText = new fabric.Text("I'm in Comic Sans", {
+            fontFamily: 'Comic Sans'
+          });
+          ctx.add(text);
+          ctx.add(comicSansText);
+          ctx.renderAll();
+          return ctx;
+        }
+      }
+  );
+
   // 触发 onLoad
   cacheFn.forEach(fn => fn(chart));
 });
 useKLineTheme(chart);
 useKlineChartLang();
-
-function registerOverlays() {
-  overlays.forEach(registerOverlay);
-}
-
-function registerIndicators() {
-  indicators.forEach(registerIndicator);
-}
 
 function subscribeActions() {
   actions.forEach((rawType: ActionType, type: Emits,) => {

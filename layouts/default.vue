@@ -2,52 +2,91 @@
 import {ref} from 'vue';
 import {useKlineChartMemo} from "~/components/kline/core";
 import {useLocalePath} from "#i18n";
+import {getSupportedOverlays} from "~/external/KLineChart/src";
+import {OVERLAYS_DESCRIPTIONS} from "~/components/kline/extensitons/overlays";
+import type {MenuOption} from "~/components/ui/types";
+import {group, mapValues} from "radash";
 
 const localePath = useLocalePath();
 
 const collapsed = ref(true);
 
 const chartMemo = useKlineChartMemo();
-const menuOptions = [
+//console.log(getSupportedOverlays());
+const overlays = getSupportedOverlays();
+const suppoertedOverlaysWithDescription = overlays.map((key) => {
+  return OVERLAYS_DESCRIPTIONS[key] ?? {
+    name: key
+  };
+});
+
+const GROUP_ID = 'drawing_tools';
+const menuOptions: MenuOption[] = [
   {
     label: '绘图',
-    iconName: 'carbon:4k-filled',
+    icon: 'carbon:4k-filled',
     key: '/',
-    href: localePath('/', 'zh')
+    href: localePath('/', 'zh'),
+    children: suppoertedOverlaysWithDescription.map((item, index) => {
+      return {
+        label: item.name,
+        icon: 'carbon:4k-filled',
+        value: item.name,
+        key: overlays[index],
+        onClick() {
+          return chartMemo.chart.createOverlay({
+            name: overlays[index],
+            groupId: GROUP_ID,
+            onDrawEnd(options) {
+              return true;
+            }
+          });
+        }
+      };
+    }),
   },
   {
-    label: '数据表',
-    iconName: 'carbon:table-split',
-    key: '/dataset',
-    href: localePath('/dataset', 'zh')
+    label: '清空',
+    icon: 'carbon:trash-can',
+    key: '/clear',
+    onClick() {
+      chartMemo.chart.removeOverlay({groupId: GROUP_ID});
+    }
   },
-  {
-    label: 'Flow',
-    iconName: 'carbon:decision-node',
-    key: '/flow',
-    href: localePath('/flow', 'zh'),
-  },
-] as const;
+];
+
+const actions = mapValues(group(menuOptions.reduce((acc, curr) => {
+  if (curr.children) return [...acc, curr, ...curr.children];
+  return [...acc, curr];
+}, []), (item) => item.key), (value, key) => value[0]);
+
+function handleSelect(option: typeof menuOptions[number], ...args) {
+//  option.onClick?.(option);
+  console.log(actions[option.key]?.onClick?.());
+//  return chartMemo.chart.createOverlay({
+//    name: option.key,
+//    groupId: GROUP_ID,
+//  });
+}
+
+//console.log(getSupportedOverlays());
+//console.log();
+
 //<Icon icon="" />
 </script>
 <template>
+  <NuxtLoadingIndicator/>
   <d-layout class="bg-black/5 ">
-<!--    <d-header class="h-48px p-2px box-border">-->
-<!--      <div class="size-full px-12px  rounded-12px flex items-center bg-white">-->
-<!--&lt;!&ndash;        <d-avatar class="cursor-pointer flex items-center mt-4px" name=""></d-avatar>&ndash;&gt;-->
-<!--      </div>-->
-<!--    </d-header>-->
     <d-layout>
-      <d-aside class="w-fit flex-shrink-0 bg-white rounded-12px">
-        <d-menu :collapsed="true" mode="vertical" :default-select-keys="['item1']" class="w-156px h-full">
-          <d-menu-item v-for="item in menuOptions" class="flex justify-center items-center" :key="item.key">
-            <template #icon>
-              <ui-icon class="flex items-center  justify-center h-full " :icon="item.iconName"></ui-icon>
-            </template>
-            <a :href="item.href" class="flex items-center gap-12px">
-              {{ item.label }}
-            </a>
-          </d-menu-item>
+      <d-aside
+          class=" w-fit flex-shrink-0 bg-white rounded-12px max-h-screen overflow-y-auto overflow-x-hidden scrollbar-none">
+        <d-menu :collapsed="false"
+                mode="vertical"
+                :default-select-keys="['item1']" class="w-156px h-full"
+                @select="handleSelect"
+                :indent-size="0"
+        >
+          <ui-menu-items :options="menuOptions"></ui-menu-items>
         </d-menu>
       </d-aside>
       <d-content class="h-full w-full pl-6px  box-border">
@@ -55,36 +94,4 @@ const menuOptions = [
       </d-content>
     </d-layout>
   </d-layout>
-  <ClientOnly>
-    <!--    <n-layout has-sider class="bg-black/5">-->
-    <!--      <n-layout-sider-->
-    <!--          bordered-->
-    <!--          collapse-mode="width"-->
-    <!--          :collapsed-width="64"-->
-    <!--          :width="240"-->
-    <!--          :collapsed="collapsed"-->
-    <!--          show-trigger-->
-    <!--          @collapse="collapsed = true"-->
-    <!--          @expand="collapsed = false"-->
-    <!--          class="mr6px"-->
-    <!--      >-->
-    <!--        <ui-menu-->
-    <!--            :collapsed="collapsed"-->
-    <!--            :menu-options="menuOptions"-->
-    <!--        >-->
-    <!--          <template #render-icon="option">-->
-    <!--            <RouterLink v-if="option.href" :to="option.href">-->
-    <!--              <ui-icon @click="option.onClick?.(option)" :icon="option.iconName"></ui-icon>-->
-    <!--            </RouterLink>-->
-    <!--          </template>-->
-    <!--          <template #render-label="option">-->
-    <!--            <RouterLink v-if="option.href" :to="option.href"> asd{{ option.label ?? '未命名' }}</RouterLink>-->
-    <!--          </template>-->
-    <!--        </ui-menu>-->
-    <!--      </n-layout-sider>-->
-    <!--      <div class="h-screen w-full">-->
-    <!--      </div>-->
-    <!--    </n-layout>-->
-  </ClientOnly>
-
 </template>

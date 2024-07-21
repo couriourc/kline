@@ -1,7 +1,10 @@
 import {mergeConfigs} from '@unocss/core';
-import config from './.nuxt/uno.config.mjs';
+import {presetAttributify, presetUno} from "unocss";
 
-export default mergeConfigs([config, {
+import {presetScrollbar} from 'unocss-preset-scrollbar';
+
+export default mergeConfigs([ {
+    presets: [presetUno(), presetAttributify(), presetScrollbar()],
     // your overrides
     shortcuts: {
         'flex-center': 'flex items-center justify-center'

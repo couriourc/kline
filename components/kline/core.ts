@@ -1,5 +1,6 @@
+import {useWindowSize} from "#imports";
 import {dispose, FormatDateType, init, utils} from "klinecharts";
-import type {Ref} from "vue";
+import {inject, onMounted, onUnmounted, ref, Ref, watch} from "vue";
 import {useKLineStore} from "~/components/kline/store";
 import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
 
