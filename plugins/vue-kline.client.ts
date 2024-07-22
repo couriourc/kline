@@ -1,6 +1,6 @@
 import {defineNuxtPlugin} from "nuxt/app";
 import overlays from "~/components/kline/extensitons/overlays";
-import {registerIndicator, registerOverlay} from "~/external/KLineChart/src";
+import {registerIndicator, registerOverlay} from "klinecharts";
 import indicators from "~/components/kline/extensitons/indicators";
 
 function registerOverlays() {

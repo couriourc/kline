@@ -27,6 +27,16 @@ defineExpose<KLineChartsRootRef>({
           <KlineChartsIndicator name="VOL" :args="{isStack:true}"/>
           <KlineChartsDataProvider/>
         </KlineChartsRoot>
+        <ui-floating-action-button>
+          <ul class="p-12px bg-white flex flex-col items-center gap-12px shadow-lg rounded-6px mb-12px">
+            <li class="" v-for="i in 4">{{ i }}</li>
+          </ul>
+          <template #reference>
+            <div>
+asd
+            </div>
+          </template>
+        </ui-floating-action-button>
       </div>
     </template>
   </KlineContextMenu>

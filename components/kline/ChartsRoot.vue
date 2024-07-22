@@ -47,29 +47,9 @@ const {chart} = useKlineChart(chartRef, (chart: KLineChart) => {
   dom?.setAttribute("height", (`${size?.height}px`) ?? "");
   // 转发 actions
   subscribeActions();
-  ((chart as any).getAllDrawPanes)?.().map(item => {
-        const canvas = item.getMainWidget().getMainCanvas();
-        if (canvas) {
-          console.log(canvas);
-          const old_canvas = canvas.getElement().cloneNode(true);
-          const old_father = canvas.getElement();
-          console.log(old_father.parentNode.appendChild(old_canvas));
-          const old_size = old_canvas.getBoundingClientRect();
-          const ctx = new fabric.Canvas(old_canvas, {
-            width: old_size.width,
-            height: old_size.height,
-          });
-          const text = new fabric.Text('hello world', {left: 900, top: 100});
-          const comicSansText = new fabric.Text("I'm in Comic Sans", {
-            fontFamily: 'Comic Sans'
-          });
-          ctx.add(text);
-          ctx.add(comicSansText);
-          ctx.renderAll();
-          return ctx;
-        }
-      }
-  );
+//  ((chart as any).getAllDrawPanes)?.().map(item => {
+//      }
+//  );
 
   // 触发 onLoad
   cacheFn.forEach(fn => fn(chart));

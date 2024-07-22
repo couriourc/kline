@@ -22,7 +22,7 @@
     "@vue-flow/core": "^1.39.0",
     "d3": "^7.9.0",
     "fabric": "^6.0.2",
-    "klinecharts": "workspace:^",
+    "klinecharts": "^9.8.10",
     "nuxt": "^3.12.3",
     "nuxtjs-naive-ui": "^1.0.2",
     "radash": "^12.1.0",

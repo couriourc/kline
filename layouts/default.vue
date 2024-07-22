@@ -2,7 +2,7 @@
 import {ref} from 'vue';
 import {useKlineChartMemo} from "~/components/kline/core";
 import {useLocalePath} from "#i18n";
-import {getSupportedOverlays} from "~/external/KLineChart/src";
+import {getSupportedOverlays} from "klinecharts";
 import {OVERLAYS_DESCRIPTIONS} from "~/components/kline/extensitons/overlays";
 import type {MenuOption} from "~/components/ui/types";
 import {group, mapValues} from "radash";
