@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import {buildLocalIconNames} from "./assets/scripts/buildIcons";
+
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: false},
@@ -12,6 +14,33 @@ export default defineNuxtConfig({
         "nuxtjs-naive-ui",
         "@nuxt/ui",
     ],
+    imports: {
+        dirs: ['stores'],
+        global: true,
+        autoImport: true,
+        scan: false
+    },
+
+    typescript: {
+        shim: false,
+        typeCheck: false
+    },
+    hooks: {
+        'build:before': () => {
+            buildLocalIconNames();
+        },
+    },
+    vueuse: {
+        ssrHandlers: true,
+    },
+
+    pinia: {
+        disableVuex: true,
+    },
+    sourcemap: {
+        server: true,
+        client: false,
+    },
     ui: {
         icons: ['heroicons', 'simple-icons'],
         safelistColors: ['primary', 'red', 'orange', 'green']
@@ -43,10 +72,6 @@ export default defineNuxtConfig({
         viewer: false,
     },
     unocss: {},
-    imports: {
-        autoImport: true,
-        scan: false
-    },
     i18n: {
         langDir: './locales',
         locales: [

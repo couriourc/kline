@@ -5,7 +5,7 @@ import {useLocalePath} from "#i18n";
 import {getSupportedOverlays} from "klinecharts";
 import {OVERLAYS_DESCRIPTIONS} from "~/plugins/extensitons/overlays";
 import type {MenuOption} from "~/components/ui/types";
-import {group, mapValues, uid} from "radash";
+import {group, mapValues} from "radash";
 
 const localePath = useLocalePath();
 
@@ -21,7 +21,7 @@ const suppoertedOverlaysWithDescription = overlays.map((key) => {
 });
 
 const GROUP_ID = 'drawing_tools';
-const memo = new Map();
+const memo = shallowReactive(new Map());
 let isDrawing = ref(false);
 const drawing_pos = reactive({
   top: 0,
@@ -45,28 +45,25 @@ const menuOptions: MenuOption[] = [
             name: overlays[index],
             groupId: GROUP_ID,
             onDrawStart(options) {
-              memo.set(uid(4), options.overlay);
-              return isDrawing.value;
+              console.log(options.overlay.id);
+              memo.set(options.overlay.id, options.overlay);
+              triggerRef(memo);
+              isDrawing.value = true;
+              return true;
             },
-            onDrawing(options) {
-              console.log(options)
-              if (options.overlay.points.length > 0) {
-                isDrawing.value = true;
-                const startPos = chartMemo.chart.convertToPixel(options.overlay.points, {
-                  absolute: true,
-                });
-                options.overlay.text = "drawing_pos.text";
-
-                drawing_pos.top = startPos[0].y ?? 0;
-                drawing_pos.left = startPos[0].x ?? 0;
-              }
-              return isDrawing.value;
+            onDoubleClick() {
+              console.log('double click');
+              return true;
             },
             onDrawEnd(options) {
+//              memo.set(options.overlay.id, options.overlay);
               isDrawing.value = false;
-              return !isDrawing.value;
-            },
 
+              options.overlay.extendData = {
+                text: drawing_pos.text,
+              };
+              return true;
+            }
           });
         }
       };

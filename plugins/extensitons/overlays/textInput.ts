@@ -29,24 +29,37 @@ import type {OverlayTemplate, TextAttrs} from 'klinecharts';
 
 const textInput: OverlayTemplate = {
     name: 'textInput',
-    totalStep: 1,
-    needDefaultPointFigure: true,
-    needDefaultXAxisFigure: true,
-    needDefaultYAxisFigure: true,
+    totalStep: 2,
     createPointFigures: (args) => {
-//        const lines: LineAttrs[] = [];
-        console.log(args.overlay.text);
-        const texts: TextAttrs[] = [{
-            ...args.coordinates[0],
-            text: args.overlay.text || 'Input Text',
-            baseline: 'bottom'
-        }];
+        console.log(args.coordinates[0]);
+        if (!args.overlay.extendData?.text) {
+            return [
+                {
+                    type: 'circle',
+                    attrs: {
+                        x: args.coordinates[0].x,
+                        y: args.coordinates[0].y,
+                        r: 5,
+                        fill: '#ff0000',
+                        stroke: '#ff0000',
+                        strokeWidth: 2
+                    }
+                }
+            ]
+        }
+        const texts: TextAttrs[] = args.coordinates.map((coordinate) => {
+            return {
+                ...coordinate,
+                text: (args.overlay.extendData?.text ?? "") ,
+                baseline: 'top'
+            };
+        });
 
         return [
             {
                 type: 'text',
-                ignoreEvent: true,
-                attrs: texts
+                attrs: texts,
+                styles: {color: '#000', fontSize: 12, fontWeight: 'bold'}
             }
         ];
     }

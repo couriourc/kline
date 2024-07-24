@@ -3,14 +3,18 @@
        ref="floatContainerRef"
 
   >
-    <div class="draggable-float-slot fixed translate-x-30%" v-if="slots.default" v-show="!isNoDragging"
-         :style="{ left: (pos.x) + 'px', top: (pos.y+40) + 'px' }"
+    <div class="draggable-float-slot  "
+         v-if="slots.default"
+         ref="floatTooltipRef"
+         :style="floatingStyles"
+         v-show="isShow"
     >
       <slot></slot>
     </div>
     <div
         :style="{ left: (pos.x) + 'px', top: (pos.y) + 'px' }"
         ref="floatControllerRef"
+        @click="isShow = !isShow"
         class="drop-shadow border-1 rounded-full bg-white fixed draggable-float-item flex flex-col flex-center size-50px">
       <slot name="reference"></slot>
     </div>
@@ -23,6 +27,11 @@ import {useElementBounding} from '@vueuse/core';
 import {noop} from "underscore";
 import {getPadding} from "./utils";
 
+
+import {autoUpdate, useFloating} from '@floating-ui/vue';
+import {autoPlacement, offset} from '@floating-ui/dom';
+
+const reference = ref(null);
 
 interface Props {
   padding?: string; // 安全距离
@@ -53,11 +62,17 @@ const paddingArr = computed(() => {
 });
 const floatContainerRef = ref<HTMLDivElement>();
 const floatControllerRef = ref<HTMLDivElement>();
+const floatTooltipRef = ref<HTMLDivElement>();
 const viewportElRef = computed(() => props.getPortal?.() ?? floatContainerRef.value?.parentElement as HTMLDivElement);
 const bounding = useElementBounding(viewportElRef);
 const pos = reactive({x: 0, y: 0, width: 0, height: 0,});
 const handleEmit = defineEmits(['handleOk', 'handleMove', 'handleEnd']);
-const isNoDragging = ref<boolean>(true);
+const isShow = ref<boolean>(false);
+const {floatingStyles, update,} = useFloating(floatControllerRef, floatTooltipRef, {
+  placement: 'top',
+  middleware: [autoPlacement(), offset(10)],
+  whileElementsMounted: autoUpdate,
+});
 
 interface Bounding {
   x: number;
@@ -73,9 +88,10 @@ interface Bounding {
 }
 
 function getInit() {
-  pos.x = bounding.x.value + paddingArr.value.left;
-  pos.y = bounding.y.value + paddingArr.value.bottom;
-  console.log(pos.x, pos.y);
+  setTimeout(() => {
+    pos.x = bounding.x.value - paddingArr.value.right - 100 + bounding.width.value;
+    pos.y = bounding.y.value + bounding.height.value - paddingArr.value.bottom - 250;
+  });
 }
 
 function touchPc() {
@@ -96,8 +112,6 @@ function touchPc() {
     const floatContainerRefOffsetWidth = floatContainerRef.value.offsetWidth;
     const floatContainerRefOffsetHeight = floatContainerRef.value.offsetHeight;
     document.onmousemove = function (e) {
-      isNoDragging.value = true;
-
       //实时移动: 元素位置 = 鼠标位置-鼠标相对元素位置
       X = e.clientX - floatControllerRef.value.offsetWidth / 2;
       Y = e.clientY - floatControllerRef.value.offsetHeight / 2;
@@ -111,12 +125,10 @@ function touchPc() {
 
       pos.x = X;
       pos.y = Y;
-
       handleEmit('handleMove', pos);
     };
 
     document.onmouseup = function () {
-      isNoDragging.value = false;
       document.onmousemove = document.onmouseup = null;
       lastTime = Date.now();
       // 处理点击与拖动冲突问题
@@ -136,7 +148,6 @@ function touchPc() {
       }
 
       floatControllerRef.value.style.transition = 'all 0.3s';
-
       handleEmit('handleEnd', pos);
     };
   };
@@ -162,7 +173,7 @@ function touch() {
     floatControllerRef.value.style.transition = 'none';
   });
   floatControllerRef.value.addEventListener('touchmove', e => {
-    isNoDragging.value = true;
+    update();
 
     // 阻止默认动作
     e.preventDefault();
@@ -191,7 +202,6 @@ function touch() {
     }
   });
   floatControllerRef.value.addEventListener('touchend', () => {
-    isNoDragging.value = false;
 
     lastTime = Date.now();
     // 处理点击与拖动冲突问题
@@ -228,6 +238,10 @@ function handleDefaultValue() {
 //  pos.y = clientHeight.value - floatControllerRef.value.offsetHeight - props.bottom;
 }
 
+useRafFn(() => {
+  update();
+
+});
 //
 //function handleEmit(key, val) {
 //  emit(key, val);

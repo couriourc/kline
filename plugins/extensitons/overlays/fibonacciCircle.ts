@@ -49,7 +49,7 @@ const fibonacciCircle: OverlayTemplate = {
         texts.push({
           x: coordinates[0].x,
           y: coordinates[0].y + r + 6,
-          text: `${(percent * 100).toFixed(1)}%`
+          text: `${(percent * 100).toFixed(1)}%`,
         })
       })
       return [
@@ -61,7 +61,9 @@ const fibonacciCircle: OverlayTemplate = {
         {
           type: 'text',
           ignoreEvent: true,
-          attrs: texts
+          attrs: texts,
+          styles: { style: 'stroke' ,color: '#000' }
+
         }
       ]
     }

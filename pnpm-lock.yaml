@@ -11,6 +11,9 @@ importers:
       '@devui-design/icons':
         specifier: ^1.4.0
         version: 1.4.0
+      '@floating-ui/vue':
+        specifier: ^1.1.2
+        version: 1.1.2(vue@3.4.31)
       '@iconify-json/carbon':
         specifier: ^1.1.36
         version: 1.1.36
@@ -225,6 +228,9 @@ importers:
       unocss:
         specifier: ^0.61.3
         version: 0.61.3(@unocss/webpack@0.61.3)(postcss@8.4.39)(rollup@4.18.1)(vite@5.3.3)
+      unocss-preset-chinese:
+        specifier: ^0.3.2
+        version: 0.3.2(@unocss/nuxt@0.61.3)(unocss@0.61.3)
       unocss-preset-scrollbar:
         specifier: ^0.3.1
         version: 0.3.1(unocss@0.61.3)
@@ -1261,21 +1267,22 @@ packages:
     dependencies:
       '@floating-ui/core': 1.6.4
       '@floating-ui/utils': 0.2.4
-    dev: true
 
   /@floating-ui/utils@0.2.4:
     resolution: {integrity: sha512-dWO2pw8hhi+WrXq1YJy2yCuWoL20PddgGaqTgVe4cOS9Q6qklXCiA1tJEqX6BEwRNSCP84/afac9hd4MS+zEUA==}
 
-  /@floating-ui/vue@1.1.1(vue@3.4.31):
-    resolution: {integrity: sha512-cyawjk9etPZPl/RVtMRnWrwtAhWbPVSrRVYARgOzhLIqxr0k2up1APrrFjqP9QwRQ0AwjKSvbWg4YC6jESutow==}
+  /@floating-ui/utils@0.2.5:
+    resolution: {integrity: sha512-sTcG+QZ6fdEUObICavU+aB3Mp8HY4n14wYHdxK4fXjPmv3PXZZeY5RaguJmGyeH/CJQhX3fqKUtS4qc1LoHwhQ==}
+
+  /@floating-ui/vue@1.1.2(vue@3.4.31):
+    resolution: {integrity: sha512-7pq8HfhVhxOpV6iIMKSslI51fwFYy8G0BF0GjhlhpmUhVwL8jCByvcjzTwEtRWFVRrGD/I9kLp6eUHKumiUTjw==}
     dependencies:
       '@floating-ui/dom': 1.6.7
-      '@floating-ui/utils': 0.2.4
+      '@floating-ui/utils': 0.2.5
       vue-demi: 0.14.8(vue@3.4.31)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
-    dev: true
 
   /@headlessui/tailwindcss@0.2.1(tailwindcss@3.4.4):
     resolution: {integrity: sha512-2+5+NZ+RzMyrVeCZOxdbvkUSssSxGvcUxphkIfSVLpRiKsj+/63T2TOL9dBYMXVfj/CGr6hMxSRInzXv6YY7sA==}
@@ -2814,6 +2821,10 @@ packages:
     resolution: {integrity: sha512-fx5VhOjSHn0HdV2D34pEwFMAHJcJQRTCp1xEE4GzxY1irXzaa+m2aYf5PZjmDxehiOC16IH7TO9FOWANXk1E0w==}
     dev: true
 
+  /@unocss/core@0.58.9:
+    resolution: {integrity: sha512-wYpPIPPsOIbIoMIDuH8ihehJk5pAZmyFKXIYO/Kro98GEOFhz6lJoLsy6/PZuitlgp2/TSlubUuWGjHWvp5osw==}
+    dev: true
+
   /@unocss/core@0.61.3:
     resolution: {integrity: sha512-9vixY1i5E0DQFtHJz/pHyFlFsiXJgL1bKHuocbl+GUi09lY/gE9TRm2qr2JOJx/BF720tMv9VxYI8Zq3EyPOXA==}
     dev: true
@@ -2826,6 +2837,12 @@ packages:
     resolution: {integrity: sha512-p2pyzz/ONvc5CGcaB9OZvWE8qkRSgyuhaQqFQLdBFeUhveHC0CGP0iSnXwBgAFHWM7DJo4/JpWeZ+mBt0ogVLA==}
     dependencies:
       '@unocss/core': 0.56.5
+    dev: true
+
+  /@unocss/extractor-arbitrary-variants@0.58.9:
+    resolution: {integrity: sha512-M/BvPdbEEMdhcFQh/z2Bf9gylO1Ky/ZnpIvKWS1YJPLt4KA7UWXSUf+ZNTFxX+X58Is5qAb5hNh/XBQmL3gbXg==}
+    dependencies:
+      '@unocss/core': 0.58.9
     dev: true
 
   /@unocss/extractor-arbitrary-variants@0.61.3:
@@ -2920,6 +2937,14 @@ packages:
       '@unocss/rule-utils': 0.56.5
     dev: true
 
+  /@unocss/preset-mini@0.58.9:
+    resolution: {integrity: sha512-m4aDGYtueP8QGsU3FsyML63T/w5Mtr4htme2jXy6m50+tzC1PPHaIBstMTMQfLc6h8UOregPJyGHB5iYQZGEvQ==}
+    dependencies:
+      '@unocss/core': 0.58.9
+      '@unocss/extractor-arbitrary-variants': 0.58.9
+      '@unocss/rule-utils': 0.58.9
+    dev: true
+
   /@unocss/preset-mini@0.61.3:
     resolution: {integrity: sha512-QY9P7jcLePkmCGQSqX+ha4Rh2YhY9b9P8gtLFnjzqcdmSxvDFkT7Kf5Un/u/jwV+zCz/5t4F88vWLzBM6js6yQ==}
     dependencies:
@@ -2999,6 +3024,14 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       '@unocss/core': 0.56.5
+    dev: true
+
+  /@unocss/rule-utils@0.58.9:
+    resolution: {integrity: sha512-45bDa+elmlFLthhJmKr2ltKMAB0yoXnDMQ6Zp5j3OiRB7dDMBkwYRPvHLvIe+34Ey7tDt/kvvDPtWMpPl2quUQ==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@unocss/core': 0.58.9
+      magic-string: 0.30.10
     dev: true
 
   /@unocss/rule-utils@0.61.3:
@@ -7750,7 +7783,7 @@ packages:
       vue: '>= 3.2.0'
     dependencies:
       '@floating-ui/dom': 1.6.7
-      '@floating-ui/vue': 1.1.1(vue@3.4.31)
+      '@floating-ui/vue': 1.1.2(vue@3.4.31)
       '@internationalized/date': 3.5.4
       '@internationalized/number': 3.5.3
       '@tanstack/vue-virtual': 3.8.3(vue@3.4.31)
@@ -8667,6 +8700,23 @@ packages:
   /universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
+
+  /unocss-preset-chinese@0.3.2(@unocss/nuxt@0.61.3)(unocss@0.61.3):
+    resolution: {integrity: sha512-/0Y7DfwRMOntb/drvhz+FxZ6jisapBH8W+u+1Lkt6LYW19m9fg/xiQeWodcWhZrAaoSuv42mvsALBzZLngzo6Q==}
+    peerDependencies:
+      '@unocss/nuxt': '*'
+      unocss: '*'
+    peerDependenciesMeta:
+      '@unocss/nuxt':
+        optional: true
+      unocss:
+        optional: true
+    dependencies:
+      '@unocss/core': 0.58.9
+      '@unocss/nuxt': 0.61.3(postcss@8.4.39)(rollup@4.18.1)(vite@5.3.3)(webpack@5.93.0)
+      '@unocss/preset-mini': 0.58.9
+      unocss: 0.61.3(@unocss/webpack@0.61.3)(postcss@8.4.39)(rollup@4.18.1)(vite@5.3.3)
+    dev: true
 
   /unocss-preset-scrollbar@0.3.1(unocss@0.61.3):
     resolution: {integrity: sha512-LhvcQA1cfwq06sqAZY++1crrLsOf/IfOPdyCkMHVyywI9WCvMhxCJlCcrySlQI8/Y2VUjOpLBDWB0w3DXS5qRA==}
