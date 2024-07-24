@@ -33,7 +33,7 @@ defineExpose<KLineChartsRootRef>({
           </ul>
           <template #reference>
             <div>
-asd
+              <u-icon icon="carbon:menu"></u-icon>
             </div>
           </template>
         </ui-floating-action-button>

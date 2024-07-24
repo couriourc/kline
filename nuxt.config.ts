@@ -60,7 +60,7 @@ export default defineNuxtConfig({
         ]
     },
     build: {
-        transpile: ['klinecharts'],
+        transpile: ['klinecharts', 'd3'],
     },
     app: {
         head: {

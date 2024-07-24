@@ -16,6 +16,7 @@ import eightWaves from './eightWaves';
 import anyWaves from './anyWaves';
 import abcd from './abcd';
 import xabcd from './xabcd';
+import textInput from "./textInput";
 
 const overlays = [
     arrow,
@@ -34,7 +35,8 @@ const overlays = [
     eightWaves,
     anyWaves,
     abcd,
-    xabcd
+    xabcd,
+    textInput,
 ];
 export const OVERLAYS_DESCRIPTIONS = {
     "arrow": {
@@ -61,5 +63,6 @@ export const OVERLAYS_DESCRIPTIONS = {
     "abcd": {name: 'abcd',},
     "xabcd": {name: 'xabcd',},
     "default": {name: 'default',},
+    "textInput": {name: '文本',},
 };
 export default overlays;

@@ -38,7 +38,7 @@ const rect: OverlayTemplate = {
       color: 'rgba(22, 119, 255, 0.15)'
     }
   },
-  createPointFigures: ({ coordinates }) => {
+  createPointFigures: ({ coordinates,...args }) => {
     if (coordinates.length > 1) {
       return [
         {

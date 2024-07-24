@@ -29,32 +29,19 @@ import type {OverlayTemplate, TextAttrs} from 'klinecharts';
 
 const textInput: OverlayTemplate = {
     name: 'textInput',
-    totalStep: 3,
+    totalStep: 1,
     needDefaultPointFigure: true,
     needDefaultXAxisFigure: true,
     needDefaultYAxisFigure: true,
-    createPointFigures: ({coordinates, overlay, precision, ...args}) => {
+    createPointFigures: (args) => {
 //        const lines: LineAttrs[] = [];
-        console.log(...args);
-        const texts: TextAttrs[] = [];
-        if (coordinates.length > 1) {
-            const textX = coordinates[1].x > coordinates[0].x ? coordinates[0].x : coordinates[1].x;
-            const percents = [1, 0.786, 0.618, 0.5, 0.382, 0.236, 0];
-            const yDif = coordinates[0].y - coordinates[1].y;
-            const points = overlay.points;
-            const valueDif = points[0].value - points[1].value;
-            percents.forEach(percent => {
-                const y = coordinates[1].y + yDif * percent;
-                const price = (points[1].value + valueDif * percent).toFixed(precision.price);
-//                lines.push({coordinates: [{x: coordinates[0].x, y}, {x: coordinates[1].x, y}]});
-                texts.push({
-                    x: textX,
-                    y,
-                    text: `${price} (${(percent * 100).toFixed(1)}%)`,
-                    baseline: 'bottom'
-                });
-            });
-        }
+        console.log(args.overlay.text);
+        const texts: TextAttrs[] = [{
+            ...args.coordinates[0],
+            text: args.overlay.text || 'Input Text',
+            baseline: 'bottom'
+        }];
+
         return [
             {
                 type: 'text',

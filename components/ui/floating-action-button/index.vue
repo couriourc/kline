@@ -1,19 +1,28 @@
 <template>
-  <div class="draggable-float-wrap fixed z-9999"
-       ref="floatRef"
-       :style="{ left: left + 'px', top: top + 'px' }"
-       @click="handleBack">
-    <div class="draggable-float-slot" v-if="slots.default">
+  <div class="draggable-float-wrap fixed z-9999 "
+       ref="floatContainerRef"
+
+  >
+    <div class="draggable-float-slot fixed translate-x-30%" v-if="slots.default" v-show="!isNoDragging"
+         :style="{ left: (pos.x) + 'px', top: (pos.y+40) + 'px' }"
+    >
       <slot></slot>
     </div>
-    <div class="drop-shadow border-1 rounded-full bg-white draggable-float-item flex flex-col flex-center size-50px">
+    <div
+        :style="{ left: (pos.x) + 'px', top: (pos.y) + 'px' }"
+        ref="floatControllerRef"
+        class="drop-shadow border-1 rounded-full bg-white fixed draggable-float-item flex flex-col flex-center size-50px">
       <slot name="reference"></slot>
     </div>
   </div>
 </template>
 <script setup lang="ts" name="DraggableFloat">
-import {computed, nextTick, onMounted, ref, type VNode} from 'vue';
-import {getPadding} from './utils';
+import {computed, onMounted, reactive, ref, type VNode} from 'vue';
+
+import {useElementBounding} from '@vueuse/core';
+import {noop} from "underscore";
+import {getPadding} from "./utils";
+
 
 interface Props {
   padding?: string; // 安全距离
@@ -27,211 +36,182 @@ interface Props {
   getPortal: Function;
 }
 
+const slots = defineSlots<{
+  default: () => VNode;
+  reference?: () => VNode;
+}>();
 const props = withDefaults(defineProps<Props>(), {
   padding: '30,5,50,10',
   isOverflowClient: false,
   isSticky: true,
   bottom: 100,
-  btnText: '返回',
-  isFn: false,
-  fn: () => {
-  },
-  getPortal: () => {
-  }
+  getPortal: noop
 });
-
-const emit = defineEmits(['handleOk', 'handleMove', 'handleEnd']);
-const slots = defineSlots<{
-  default: () => VNode;
-  reference?: () => VNode;
-}>();
-const floatRef = ref<HTMLElement | any>(); // 拖动dome
-const clientWidth = ref<number>(0); // 视口宽度(元素 + 边框大小)
-const clientHeight = ref<number>(0); // 视口高度
-const currentTop = ref<number>(0); // 当前滚动的距离
-const floatWidth = ref<number>(0); // 当前拖动元素的宽(内容 + padding + border)
-const floatHeight = ref<number>(0); // 当前拖动元素的高
-const top = ref<number>(0);
-const left = ref<number>(0);
 
 const paddingArr = computed(() => {
   return getPadding(props.padding);
 });
-const parent = computed(() => props.getPortal() ?? (floatRef.value as HTMLElement).parentNode as HTMLDivElement);
+const floatContainerRef = ref<HTMLDivElement>();
+const floatControllerRef = ref<HTMLDivElement>();
+const viewportElRef = computed(() => props.getPortal?.() ?? floatContainerRef.value?.parentElement as HTMLDivElement);
+const bounding = useElementBounding(viewportElRef);
+const pos = reactive({x: 0, y: 0, width: 0, height: 0,});
+const handleEmit = defineEmits(['handleOk', 'handleMove', 'handleEnd']);
+const isNoDragging = ref<boolean>(true);
 
-function getInit() {
-  const rect = (parent.value as HTMLDivElement).getBoundingClientRect();
-
-  clientWidth.value = rect.width;
-  clientHeight.value = rect.height;
-
-  currentTop.value = parent.value.scrollTop || document.body.scrollTop;
-  floatWidth.value = floatRef.value.offsetWidth;
-  floatHeight.value = floatRef.value.offsetHeight;
+interface Bounding {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  padding: Partial<{
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  }>;
 }
 
-function handleBack() {
-  let isClick = floatRef.value.getAttribute('data-flag');
-  if (isClick !== 'true') {
-    return false;
-  }
-  props.isFn && props.fn();
-  handleEmit('handleOk', {
-    left: left.value,
-    top: top.value,
-  });
+function getInit() {
+  pos.x = bounding.x.value + paddingArr.value.left;
+  pos.y = bounding.y.value + paddingArr.value.bottom;
+  console.log(pos.x, pos.y);
 }
 
 function touchPc() {
-  floatRef.value.style.cursor = 'pointer';
+  floatControllerRef.value.style.cursor = 'pointer';
   let firstTime: number = 0;
   let lastTime: number = 0;
   let X: number = 0;
   let Y: number = 0;
-  floatRef.value.onmousedown = function (e: any) {
-    firstTime = new Date().getTime();
-    floatRef.value.setAttribute('data-flag', 'false');
-    floatRef.value.style.transition = 'none';
-
+  floatControllerRef.value.onmousedown = function (e: any) {
+    firstTime = Date.now();
+    floatControllerRef.value.setAttribute('data-flag', 'false');
+    floatControllerRef.value.style.transition = 'none';
     if (e.preventDefault) {
       e.preventDefault();
     } else {
       e.returnValue = false; // 解决快速频繁拖动滞后问题
     }
-
+    const floatContainerRefOffsetWidth = floatContainerRef.value.offsetWidth;
+    const floatContainerRefOffsetHeight = floatContainerRef.value.offsetHeight;
     document.onmousemove = function (e) {
-      //实时移动: 元素位置 = 鼠标位置-鼠标相对元素位置
-      X = e.clientX - floatRef.value.offsetWidth / 2;
-      Y = e.clientY - floatRef.value.offsetHeight / 2;
+      isNoDragging.value = true;
 
+      //实时移动: 元素位置 = 鼠标位置-鼠标相对元素位置
+      X = e.clientX - floatControllerRef.value.offsetWidth / 2;
+      Y = e.clientY - floatControllerRef.value.offsetHeight / 2;
+      const clientWidth = bounding.width;
+      const clientHeight = bounding.height;
       // 拖动是否可以溢出窗口
       if (!props.isOverflowClient) {
-        if (X <= 0) {
-          // 靠近左侧
-          X = paddingArr.value[3];
-        } else if (X > clientWidth.value - floatRef.value.clientWidth) {
-          // 靠近右侧
-          X = clientWidth.value - floatRef.value.clientWidth - paddingArr.value[1];
-        }
-
-        if (Y <= 0) {
-          // 靠近顶部
-          Y = paddingArr.value[0];
-        } else if (Y > clientHeight.value - floatRef.value.clientHeight) {
-          // 靠近底部
-          Y = clientHeight.value - floatRef.value.clientHeight - paddingArr.value[2];
-        }
+        X = Math.min(Math.max(X, bounding.x.value + floatContainerRefOffsetWidth + paddingArr.value.left), clientWidth.value - floatContainerRef.value.offsetWidth - paddingArr.value.right);
+        Y = Math.min(Math.max(Y, bounding.y.value + floatContainerRefOffsetHeight + paddingArr.value.top), clientHeight.value - floatContainerRef.value.offsetHeight - paddingArr.value.bottom);
       }
-      left.value = X;
-      top.value = Y;
 
-      handleEmit('handleMove', {
-        left: X,
-        top: Y,
-      });
+      pos.x = X;
+      pos.y = Y;
+
+      handleEmit('handleMove', pos);
     };
 
     document.onmouseup = function () {
+      isNoDragging.value = false;
       document.onmousemove = document.onmouseup = null;
-      lastTime = new Date().getTime();
+      lastTime = Date.now();
       // 处理点击与拖动冲突问题
       if (lastTime - firstTime < 200) {
-        return floatRef.value.setAttribute('data-flag', 'true');
+        return floatControllerRef.value.setAttribute('data-flag', 'true');
       }
-
+      const clientWidth = bounding.width;
       // 吸边效果
       if (props.isSticky) {
         if (X > clientWidth.value / 2) {
           // 放下坐标靠近右侧
-          X = clientWidth.value - floatRef.value.offsetWidth;
-          left.value = X;
+          pos.x = clientWidth.value - floatControllerRef.value.offsetWidth;
         } else {
           // 放下坐标靠近左侧
-          left.value = paddingArr.value[3];
+          pos.x = bounding.x.value + floatControllerRef.value.offsetWidth;
         }
       }
 
-      floatRef.value.style.transition = 'all 0.3s';
+      floatControllerRef.value.style.transition = 'all 0.3s';
 
-      handleEmit('handleEnd', {
-        left: X,
-        top: Y,
-      });
+      handleEmit('handleEnd', pos);
     };
   };
 }
+
 
 function touch() {
   let firstTime: number = 0;
   let lastTime: number = 0;
   let X: number = 0;
   let Y: number = 0;
-  // 获取滚动元素
-  // scrollContainer.value.addEventListener('scroll', handleScrollStart);
-  // 设置位置
 
-  floatRef.value.addEventListener('touchstart', () => {
-    firstTime = new Date().getTime();
-    floatRef.value.setAttribute('data-flag', 'false');
-    floatRef.value.style.transition = 'none';
+  const clientWidth = bounding.width;
+  const clientHeight = bounding.height;
+
+  let floatContainerRefOffsetWidth = 0;
+  let floatContainerRefOffsetHeight = 0;
+  floatControllerRef.value.addEventListener('touchstart', () => {
+    floatContainerRefOffsetWidth = floatContainerRef.value.offsetWidth;
+    floatContainerRefOffsetHeight = floatContainerRef.value.offsetHeight;
+    firstTime = Date.now();
+    floatControllerRef.value.setAttribute('data-flag', 'false');
+    floatControllerRef.value.style.transition = 'none';
   });
-  floatRef.value.addEventListener('touchmove', e => {
+  floatControllerRef.value.addEventListener('touchmove', e => {
+    isNoDragging.value = true;
+
     // 阻止默认动作
     e.preventDefault();
     if (e.targetTouches.length === 1) {
       const touch = e.targetTouches[0];
 
       //实时移动: 元素位置 = 鼠标位置-鼠标相对元素位置
-      X = touch.clientX - floatRef.value.offsetWidth / 2;
-      Y = touch.clientY - floatRef.value.offsetHeight / 2;
+      X = touch.clientX - floatControllerRef.value.offsetWidth / 2;
+      Y = touch.clientY - floatControllerRef.value.offsetHeight / 2;
 
       // 拖动是否可以溢出窗口
-      if (!props.isOverflowClient) {
-        if (X <= 0) {
-          // 靠近左侧
-          X = paddingArr.value[3];
-        } else if (X > clientWidth.value - floatRef.value.clientWidth) {
-          // 靠近右侧
-          X = clientWidth.value - floatRef.value.clientWidth - paddingArr.value[1];
-        }
 
-        if (Y <= 0) {
-          // 靠近顶部
-          Y = paddingArr.value[0];
-        } else if (Y > clientHeight.value - floatRef.value.clientHeight) {
-          // 靠近底部
-          Y = clientHeight.value - floatRef.value.clientHeight - paddingArr.value[2];
-        }
+      if (!props.isOverflowClient) {
+        X = Math.min(Math.max(X, bounding.x.value + floatContainerRefOffsetWidth + paddingArr.value.left), clientWidth.value - floatContainerRefOffsetWidth - paddingArr.value.right);
+        Y = Math.min(Math.max(Y, bounding.y.value + floatContainerRefOffsetHeight + paddingArr.value.top), clientHeight.value - floatContainerRefOffsetHeight - paddingArr.value.bottom);
       }
 
-      left.value = X;
-      top.value = Y;
+
+      pos.x = X;
+      pos.y = Y;
+
       handleEmit('handleMove', {
         left: X,
         top: Y,
       });
     }
   });
-  floatRef.value.addEventListener('touchend', () => {
-    lastTime = new Date().getTime();
+  floatControllerRef.value.addEventListener('touchend', () => {
+    isNoDragging.value = false;
+
+    lastTime = Date.now();
     // 处理点击与拖动冲突问题
     if (lastTime - firstTime < 200) {
-      return floatRef.value.setAttribute('data-flag', 'true');
+      return floatControllerRef.value.setAttribute('data-flag', 'true');
     }
 
     // 吸边效果
     if (props.isSticky) {
       if (X > clientWidth.value / 2) {
         // 放下坐标靠近右侧
-        X = clientWidth.value - floatRef.value.offsetWidth;
-        left.value = X;
+        X = clientWidth.value - floatControllerRef.value.offsetWidth;
+        pos.x = X;
       } else {
         // 放下坐标靠近左侧
-        left.value = paddingArr.value[3];
+        pos.x = paddingArr.value.right + floatControllerRef.value.offsetWidth;
       }
     }
 
-    floatRef.value.style.transition = 'all 0.3s';
+    floatControllerRef.value.style.transition = 'all 0.3s';
 
     handleEmit('handleEnd', {
       left: X,
@@ -240,15 +220,19 @@ function touch() {
   });
 }
 
+//
 function handleDefaultValue() {
-  left.value = clientWidth.value - floatWidth.value - paddingArr.value[1];
-  top.value = clientHeight.value - floatWidth.value - props.bottom;
+//  const clientWidth = bounding.width;
+//  const clientHeight = bounding.height;
+//  pos.x = clientWidth.value - floatControllerRef.value.offsetWidth - paddingArr.value[1];
+//  pos.y = clientHeight.value - floatControllerRef.value.offsetHeight - props.bottom;
 }
 
-function handleEmit(key, val) {
-  emit(key, val);
-}
-
+//
+//function handleEmit(key, val) {
+//  emit(key, val);
+//}
+//
 onMounted(() => {
   nextTick(() => {
     getInit();

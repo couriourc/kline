@@ -1,7 +1,7 @@
 import {defineNuxtPlugin} from "nuxt/app";
-import overlays from "~/components/kline/extensitons/overlays";
+import overlays from "./extensitons/overlays";
 import {registerIndicator, registerOverlay} from "klinecharts";
-import indicators from "~/components/kline/extensitons/indicators";
+import indicators from "./extensitons/indicators";
 
 function registerOverlays() {
     overlays.forEach(registerOverlay);

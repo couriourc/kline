@@ -85,7 +85,7 @@ import type {KLineChartsRootRef} from "~/components/kline/type";
 import VueSplitter from '@rmp135/vue-splitter';
 
 import {computed, ref} from "vue";
-import overlays, {OVERLAYS_DESCRIPTIONS} from "~/components/kline/extensitons/overlays";
+import overlays, {OVERLAYS_DESCRIPTIONS} from "~/plugins/extensitons/overlays";
 import {useKlineChartMemo} from "~/components/kline/core";
 
 const chartRef = ref<KLineChartsRootRef>();
