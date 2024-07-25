@@ -6,7 +6,6 @@ import {useElementSize, useMouse, useWindowScroll} from "#imports";
 import {defineShortcuts} from "#ui/composables/defineShortcuts";
 
 
-
 defineProps<{
   menus: MenuOption[]
 }>();
@@ -51,7 +50,7 @@ const people = [
   {id: 7, label: 'Caroline Schultz'},
   {id: 8, label: 'Mason Heaney'},
   {id: 9, label: 'Claudie Smitham'},
-  {id: 10, label: 'Emil Schaefer'}
+  {id: 10, label: 'Emil Schaefer,child:true'}
 ];
 const selected = ref([people[3]]);
 
@@ -64,14 +63,21 @@ const ui = {
   group: {
     label: 'px-2 my-2 text-xs font-semibold text-gray-500 dark:text-gray-400',
     command: {
-      base: 'flex justify-between select-none cursor-default items-center rounded-md px-2 py-2 gap-2 relative',
+      base: 'flex select-none cursor-default items-center rounded-md px-2 py-2 gap-2 relative',
       active: 'bg-gray-200 dark:bg-gray-700/50 text-gray-900 dark:text-white',
       container: 'flex items-center gap-3 min-w-0',
+      suffix: 'hidden',
+      prefix: 'hidden',
+      shortcuts: 'hidden md:inline-flex flex-shrink-0 gap-0.5',
+
       icon: {
         base: 'flex-shrink-0 ',
         active: 'text-gray-900 dark:text-white',
         inactive: 'text-gray-400 dark:text-gray-500'
       },
+      selectedIcon: {
+        base: 'h-5 w-5 text-gray-900 dark:text-white hidden flex-shrink-0',
+      }
     }
   }
 };
@@ -90,14 +96,22 @@ const closeButton = {
   >
     <UCommandPalette
         v-model="selected"
-        placeholder="Try Draw Some"
+        icon="i-heroicons-command-line"
+        placeholder="输入命令"
         nullable
         :autoselect="false"
         :groups="[{ key: 'people', commands: people }]"
         :ui="ui"
         :fuse="{ resultLimit: 6, fuseOptions: { threshold: 0.1 } }"
         :close-button="closeButton"
-    />
+    >
+      <template #people-active="row">
+        {{ row.command.label }}
+      </template>
+      <template #people-inactive="row">
+        {{ row.command.label }}
+      </template>
+    </UCommandPalette>
   </UContextMenu>
 
   <slot :onContextMenu="onContextMenu"></slot>

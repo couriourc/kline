@@ -22,6 +22,8 @@ export default defineComponent({
                     if (_.isString(props.icon)) {
                         if (props.icon.includes(':')) {
                             return <Icon {...attrs} icon={props.icon} {...attrs}/>;
+                        } else if ((props.icon as string).startsWith('i-')) {
+                            return <u-icon {...attrs} name={props.icon}></u-icon>;
                         } else {
                             return <d-icon {...attrs} name={props.icon} v-slots={slots}>
                             </d-icon>;

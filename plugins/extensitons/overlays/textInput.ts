@@ -31,7 +31,6 @@ const textInput: OverlayTemplate = {
     name: 'textInput',
     totalStep: 2,
     createPointFigures: (args) => {
-        console.log(args.coordinates[0]);
         if (!args.overlay.extendData?.text) {
             return [
                 {
@@ -40,17 +39,19 @@ const textInput: OverlayTemplate = {
                         x: args.coordinates[0].x,
                         y: args.coordinates[0].y,
                         r: 5,
+                    },
+                    styles: {
                         fill: '#ff0000',
                         stroke: '#ff0000',
                         strokeWidth: 2
                     }
                 }
-            ]
+            ];
         }
         const texts: TextAttrs[] = args.coordinates.map((coordinate) => {
             return {
                 ...coordinate,
-                text: (args.overlay.extendData?.text ?? "") ,
+                text: (args.overlay.extendData?.text ?? ""),
                 baseline: 'top'
             };
         });

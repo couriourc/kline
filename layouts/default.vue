@@ -6,6 +6,7 @@ import {getSupportedOverlays} from "klinecharts";
 import {OVERLAYS_DESCRIPTIONS} from "~/plugins/extensitons/overlays";
 import type {MenuOption} from "~/components/ui/types";
 import {group, mapValues} from "radash";
+import executeCommand from "~/components/kline/commands";
 
 const localePath = useLocalePath();
 
@@ -96,7 +97,41 @@ function handleSelect(option: typeof menuOptions[number], ...args) {
 //console.log(getSupportedOverlays());
 //console.log();
 
-//<Icon icon="" />
+const links = [
+  [
+    {
+      label: '',
+      avatar: {
+        src: 'https://avatars.githubusercontent.com/u/739984?v=4'
+      },
+    }
+  ],
+  [
+    {
+      icon: 'icon-chart',
+      children: [
+        [{
+          label: 'Kline',
+          icon: 'icon-chart',
+          onClick() {
+            executeCommand("createOverlay", {name: 'textInput',},
+            );
+          }
+        }]
+      ]
+    },
+    {
+      icon: 'icon-beans',
+      children: [
+        [{
+          label: 'Kline',
+          icon: 'icon-chart',
+        }]
+      ]
+    },
+  ]
+];
+
 </script>
 <template>
   <NuxtLoadingIndicator/>
@@ -104,14 +139,9 @@ function handleSelect(option: typeof menuOptions[number], ...args) {
     <d-layout>
       <d-aside
           class=" w-fit flex-shrink-0 bg-white rounded-12px max-h-screen overflow-y-auto overflow-x-hidden scrollbar-none">
-        <d-menu :collapsed="false"
-                mode="vertical"
-                :default-select-keys="['item1']" class="w-156px h-full"
-                @select="handleSelect"
-                :indent-size="0"
-        >
-          <ui-menu-items :options="menuOptions"></ui-menu-items>
-        </d-menu>
+
+        <ui-menu-items :links="links"></ui-menu-items>
+
       </d-aside>
       <d-content class="h-full w-full pl-6px  box-border">
         <RouterView></RouterView>

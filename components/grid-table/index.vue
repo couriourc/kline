@@ -1,5 +1,7 @@
 <template>
-  <d-table :data="dataSource" table-height="200px" :show-loading="showLoading" :lazy="true" @load-more="loadMore">
+  <d-table :data="dataSource"
+           table-height="98vh"
+  >
     <d-column field="firstName" header="First Name"></d-column>
     <d-column field="lastName" header="Last Name"></d-column>
     <d-column field="gender" header="Gender"></d-column>
@@ -74,27 +76,4 @@ const dataSource = ref([
 
 let total = 100;
 
-const loadMore = () => {
-  if (dataSource.value.length >= total || showLoading.value) {
-    return;
-  }
-
-  showLoading.value = true;
-  const moreData = [];
-  const size = dataSource.value.length;
-  for (let i = 0; i < 10; i++) {
-    moreData.push({
-      firstName: 'diy' + (i + size),
-      lastName: 'more data',
-      gender: 'Female',
-      date: '2022/07/20',
-    });
-  }
-
-  // mock ajax
-  setTimeout(() => {
-    showLoading.value = false;
-    dataSource.value = dataSource.value.concat(moreData);
-  }, 500);
-};
 </script>
