@@ -1,37 +1,13 @@
-<template>
-  <UVerticalNavigation :links="links" :ui="verticalNavigationUI">
-    <template #avatar="{ link }">
-      <UAvatar v-if="link.avatar" v-bind="link.avatar" size="2xs" loading="lazy"/>
-    </template>
-    <template #icon="{ link }">
-      <UDropdown
-          v-if="link.children"
-          :items="link.children"
-          :popper="{ placement: 'right-start' }"
-          mode="click"
-      >
-        <div class="w-5!  flex justify-center items-center h-full" v-bind="link">
-          <ui-icon :icon="link.icon" class="text-base"/>
-        </div>
-        <template #item="{item}">
-          <div class="flex items-center gap-8px w-full"
-               v-bind="item"
-          >
-            <ui-icon :icon="item.icon"></ui-icon>
-            <span>{{ item.label }}</span>
-          </div>
-        </template>
-      </UDropdown>
-      <ui-icon v-else-if="link.icon" :icon="link.icon" class="text-base"/>
-    </template>
-  </UVerticalNavigation>
-</template>
-
 <script setup lang="ts">
-import type {MenuOption} from "./types";
+
 
 defineProps<{
-  links?: MenuOption[]
+  links?: [][];
+
+}>();
+
+const emits = defineEmits<{
+  (ev: 'select-aside', link: any): void;
 }>();
 
 //<Icon icon="" />
@@ -47,7 +23,7 @@ const verticalNavigationUI = {
   label: 'truncate relative hidden!',
   icon: {
     base: 'items-center justify-center w-full flex-shrink-0 w-full h-5 flex relative',
-    active: ' text-gray-700 dark:text-gray-200',
+    active: ' text-gray-700  dark:text-gray-200',
     inactive: ' text-gray-400 dark:text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-200',
   },
   avatar: {
@@ -61,31 +37,34 @@ const verticalNavigationUI = {
   },
 };
 </script>
-
-
-<!--<d-sub-menu v-if="item.children?.length">-->
-<!--<template #icon>-->
-<!--  <ui-icon class="flex items-center  justify-center h-full " :icon="item.icon"/>-->
-<!--</template>-->
-<!--<d-menu-item v-for="child in item.children" :key="child.key">-->
-<!--  <template #icon>-->
-<!--    <ui-icon class="flex items-center  justify-center h-full "-->
-<!--             :icon="child.icon"></ui-icon>-->
-<!--  </template>-->
-<!--  <span>{{ child.label }}</span>-->
-<!--</d-menu-item>-->
-<!--</d-sub-menu>-->
-<!--<d-menu-item v-else-->
-<!--             :title="item.label"-->
-<!--             class="flex justify-center items-center"-->
-<!--&gt;-->
-<!--<template #icon>-->
-<!--  <ui-icon class="flex items-center  justify-center h-full "-->
-<!--           :icon="item.icon"></ui-icon>-->
-<!--</template>-->
-<!--<a v-if="item.href" :href="item.href" class="flex items-center gap-12px">-->
-<!--  {{ item.label }}-->
-<!--</a>-->
-<!--<span v-else>{{ item.label }}</span>-->
-<!--</d-menu-item>-->
-
+<template>
+  <UVerticalNavigation :links="links" :ui="verticalNavigationUI">
+    <template #avatar="{ link }">
+      <UAvatar v-if="link.avatar" v-bind="link.avatar" size="2xs" loading="lazy"/>
+    </template>
+    <template #icon="{ link }">
+      <div class="w-5!  flex justify-center items-center h-full hover:text-gray-700!"
+           v-bind="link"
+           @click="emits('select-aside',link)"
+      >
+        <UDropdown
+            v-if="link.children"
+            :items="link.children"
+            :popper="{ placement: 'right-start' }"
+            mode="click"
+        >
+          <ui-icon :icon="link.icon" />
+          <template #item="{item}">
+            <div class="flex items-center gap-8px w-full"
+                 @click="emits('select-aside',item)"
+            >
+              <ui-icon :icon="item.icon"></ui-icon>
+              <span>{{ item.label }}</span>
+            </div>
+          </template>
+        </UDropdown>
+        <ui-icon v-else-if="link.icon" :icon="link.icon" class="text-base"/>
+      </div>
+    </template>
+  </UVerticalNavigation>
+</template>

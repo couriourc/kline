@@ -9,6 +9,8 @@ const defaultOverlayExtendData = {
 };
 
 type CreateOverlay = typeof chartsMemo.chart.createOverlay;
+type RemoveOverlay = typeof chartsMemo.chart.removeOverlay;
+type GetOverlayById = typeof chartsMemo.chart.getOverlayById;
 
 const createOverlay: CreateOverlay = (overlayCreator, paneId) => {
     let wrapperOverlayCreator: OverlayCreate[];
@@ -22,7 +24,7 @@ const createOverlay: CreateOverlay = (overlayCreator, paneId) => {
             Object.assign(option, nameOrOption);
         }
 
-        [
+        ([
             "onDrawStart",
             "onDrawing",
             "onDrawEnd",
@@ -37,11 +39,30 @@ const createOverlay: CreateOverlay = (overlayCreator, paneId) => {
             "onRemoved",
             "onSelected",
             "onDeselected",
-        ].forEach((fnName) => {
+        ] as const).forEach((fnName) => {
             const fn = option[fnName];
-            option[fnName] = (...args) => {
-                return fn?.(...args);
-            };
+            switch (fnName) {
+                case "onRightClick":
+                    option[fnName] = (...args) => {
+                        const event = args[0];
+                        event.preventDefault();
+                        fn?.(...args);
+                        return true;
+                    };
+                    break;
+                case "onRemoved":
+                    option[fnName] = (...args) => {
+                        const overlay = args[0].overlay;
+                        kLineChartStore.removeOverlays([overlay]);
+                        fn?.(...args);
+                        return true;
+                    };
+                    break;
+                default:
+                    option[fnName] = (...args) => {
+                        return fn?.(...args);
+                    };
+            }
         });
 
         option.extendData = {
@@ -65,9 +86,20 @@ const createOverlay: CreateOverlay = (overlayCreator, paneId) => {
 
     return overlayIds;
 };
+
+
+const removeOverlay: RemoveOverlay = (overlayRemover) => {
+    chartsMemo.chart.removeOverlay(overlayRemover);
+};
+
+
+const resize = () => chartsMemo.chart.resize();
+const getOverlayById: GetOverlayById = (...args) => chartsMemo.chart.getOverlayById(...args);
 const commands = {
     createOverlay,
-
+    removeOverlay,
+    resize,
+    getOverlayById
 };
 export default function executeCommand<T extends keyof typeof commands>(
     type: T,

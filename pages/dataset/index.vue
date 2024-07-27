@@ -1,12 +1,3 @@
-<template>
-  <ClientOnly>
-    <GridTable
-        :headers="headers"
-        :items="items"
-        class="h-screen">
-    </GridTable>
-  </ClientOnly>
-</template>
 <script setup lang="ts">
 
 import type {Header, Item} from "vue3-easy-data-table";
@@ -61,3 +52,12 @@ const items: Item[] = [
   },
 ];
 </script>
+<template>
+  <ClientOnly>
+    <GridTable
+        :headers="headers"
+        :items="items"
+        class="h-screen">
+    </GridTable>
+  </ClientOnly>
+</template>

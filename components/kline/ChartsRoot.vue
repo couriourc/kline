@@ -4,7 +4,8 @@ import {useKlineChart} from "~/components/kline/core";
 import {useKlineChartLang} from "~/components/kline/lang";
 import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
 import {ActionType} from "klinecharts";
-import * as fabric from 'fabric';
+//import * as fabric from 'fabric';
+import {ref} from "vue";
 
 const chartRef = ref<HTMLDivElement>();
 

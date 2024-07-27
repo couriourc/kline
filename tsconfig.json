@@ -7,7 +7,6 @@
     "moduleResolution": "node"
   },
   "exclude": [
-    // 需要去掉 "node_modules" ，不然enable-check.d.ts 不会被引入，jsx语法校验就会出错
   ],
   "include": [
     "node_modules/vue-tsx-support/enable-check.d.ts",

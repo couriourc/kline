@@ -1,25 +1,3 @@
-<template>
-  <div class="draggable-float-wrap fixed z-9999 "
-       ref="floatContainerRef"
-
-  >
-    <div class="draggable-float-slot  "
-         v-if="slots.default"
-         ref="floatTooltipRef"
-         :style="floatingStyles"
-         v-show="isShow"
-    >
-      <slot></slot>
-    </div>
-    <div
-        :style="{ left: (pos.x) + 'px', top: (pos.y) + 'px' }"
-        ref="floatControllerRef"
-        @click="isShow = !isShow"
-        class="drop-shadow border-1 rounded-full bg-white fixed draggable-float-item flex flex-col flex-center size-50px">
-      <slot name="reference"></slot>
-    </div>
-  </div>
-</template>
 <script setup lang="ts" name="DraggableFloat">
 import {computed, onMounted, reactive, ref, type VNode} from 'vue';
 
@@ -35,14 +13,14 @@ const reference = ref(null);
 
 interface Props {
   padding?: string; // 安全距离
-  isOverflowClient: boolean; // 是否可以溢出窗口
-  bottom: number;
-  isSticky: boolean; // 是否可以溢出窗口
-  imgUrl: string;
-  btnText: string;
-  isFn: boolean;
-  fn: Function;
-  getPortal: Function;
+  isOverflowClient?: boolean; // 是否可以溢出窗口
+  bottom?: number;
+  isSticky?: boolean; // 是否可以溢出窗口
+  imgUrl?: string;
+  btnText?: string;
+  isFn?: boolean;
+  fn?: Function;
+  getPortal?: Function;
 }
 
 const slots = defineSlots<{
@@ -256,3 +234,26 @@ onMounted(() => {
   });
 });
 </script>
+
+<template>
+  <div class="draggable-float-wrap fixed z-9999 "
+       ref="floatContainerRef"
+
+  >
+    <div class="draggable-float-slot  "
+         v-if="slots.default"
+         ref="floatTooltipRef"
+         :style="floatingStyles"
+         v-show="isShow"
+    >
+      <slot></slot>
+    </div>
+    <div
+        :style="{ left: (pos.x) + 'px', top: (pos.y) + 'px' }"
+        ref="floatControllerRef"
+        @click="isShow = !isShow"
+        class="drop-shadow border-1 rounded-full bg-white fixed draggable-float-item flex flex-col flex-center size-50px">
+      <slot name="reference"></slot>
+    </div>
+  </div>
+</template>

@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 
 import {ref, unref,} from "vue";
-import {type MenuOption} from "../ui/types/index";
 import {useElementSize, useMouse, useWindowScroll} from "#imports";
 import {defineShortcuts} from "#ui/composables/defineShortcuts";
+import executeCommand from "~/components/kline/commands";
+import type {Overlay} from "klinecharts";
 
-
-defineProps<{
-  menus: MenuOption[]
-}>();
 
 defineShortcuts({
   shift_a: {
@@ -40,20 +37,17 @@ function onContextMenu() {
   isOpen.value = true;
 }
 
-const people = [
-  {id: 1, label: 'Wade Cooper'},
-  {id: 2, label: 'Arlene Mccoy'},
-  {id: 3, label: 'Devon Webb'},
-  {id: 4, label: 'Tom Cook'},
-  {id: 5, label: 'Tanya Fox'},
-  {id: 6, label: 'Hellen Schmidt'},
-  {id: 7, label: 'Caroline Schultz'},
-  {id: 8, label: 'Mason Heaney'},
-  {id: 9, label: 'Claudie Smitham'},
-  {id: 10, label: 'Emil Schaefer,child:true'}
+const actions = [
+  {
+    id: 1, label: '添加文本', shortcuts: ['⌘', 'F'],
+    filter() {
+      return true;
+    }
+  },
+  {id: 1, label: '添加到自选组', shortcuts: ['⌘', 'A']},
 ];
-const selected = ref([people[3]]);
-
+const commandPlateRef = ref();
+const selected = ref([actions[0]]);
 const ui = {
   wrapper: 'flex flex-col flex-1 min-h-0 divide-y divide-gray-200 dark:divide-gray-700 bg-gray-50 dark:bg-gray-800',
   container: 'relative flex-1 overflow-y-auto divide-y divide-gray-200 dark:divide-gray-700 scroll-py-2',
@@ -87,6 +81,24 @@ const closeButton = {
   padded: false,
   onClick: () => isOpen.value = false,
 };
+const commandGroups = [{
+  key: 'actions', commands: actions,
+  search(query, commands) {
+    console.log(query);
+    if (!query) return commands;
+    return commands?.filter(command => command?.filter?.(query, command) ?? !!command.label.search(query));
+  }
+}];
+
+function handleAddOverlay() {
+  const overlayIds = executeCommand('createOverlay', 'textInput');
+  console.log(`[🪪]overlayIds-->`, overlayIds);
+
+  overlayIds.forEach(overlayId => {
+    const overlay = executeCommand('getOverlayById', overlayId as string) as Overlay;
+    overlay.extendData.text = commandPlateRef.value.query;
+  });
+}
 </script>
 <template>
   <UContextMenu v-model="isOpen"
@@ -95,21 +107,30 @@ const closeButton = {
                 z-10000 h-120px
   >
     <UCommandPalette
+        ref="commandPlateRef"
         v-model="selected"
         icon="i-heroicons-command-line"
         placeholder="输入命令"
         nullable
         :autoselect="false"
-        :groups="[{ key: 'people', commands: people }]"
+        :groups="commandGroups"
         :ui="ui"
         :fuse="{ resultLimit: 6, fuseOptions: { threshold: 0.1 } }"
         :close-button="closeButton"
+        autoclear
+        selectedIcon=""
     >
       <template #people-active="row">
         {{ row.command.label }}
       </template>
       <template #people-inactive="row">
         {{ row.command.label }}
+      </template>
+      <template #empty-state>
+        <div class="py-4px px-6px ">
+          <div class="cursor-pointer py-6px px-4px  rounded-lg  hover:bg-gray-200" @click="handleAddOverlay">添加文本
+          </div>
+        </div>
       </template>
     </UCommandPalette>
   </UContextMenu>

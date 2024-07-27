@@ -1,17 +1,8 @@
-//<template>
-//  <Icon :name="name"></Icon>
-//</template>
-//<script lang="ts" setup>
-//defineProps<{
-//  name: string
-//}>();
-
 import {defineComponent} from "vue";
 import _ from "underscore";
 import {Icon} from "@iconify/vue";
-import {NIcon} from "naive-ui";
 import {ClientOnly} from "#components";
-//</script>
+
 export default defineComponent({
     props: ['icon'],
     setup(props, {attrs, slots}) {
@@ -21,19 +12,14 @@ export default defineComponent({
                 (() => {
                     if (_.isString(props.icon)) {
                         if (props.icon.includes(':')) {
-                            return <Icon {...attrs} icon={props.icon} {...attrs}/>;
+                            return <Icon  {...attrs} icon={props.icon}/>;
                         } else if ((props.icon as string).startsWith('i-')) {
-                            return <u-icon {...attrs} name={props.icon}></u-icon>;
+                            return <u-icon  {...attrs} name={props.icon}></u-icon>;
                         } else {
                             return <d-icon {...attrs} name={props.icon} v-slots={slots}>
                             </d-icon>;
                         }
                     }
-
-                    return <NIcon {...attrs}>
-                        <IconNode></IconNode>
-                    </NIcon>;
-
                 })()
             }
         </ClientOnly>;

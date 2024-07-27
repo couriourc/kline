@@ -1,22 +1,15 @@
 <script lang="ts" setup>
 import type {MenuOption} from 'naive-ui';
-import type {KLineChart, KLineChartsRootRef} from "~/components/kline/type";
+import type {KLineChart} from "~/components/kline/type";
+import {ref} from "vue";
 
 defineProps<{
   menuOptions: MenuOption[]
 }>();
 const chartRef = ref<KLineChart | null>(null);
-defineExpose<KLineChartsRootRef>({
-  get chart() {
-    return chartRef.value.chart as unknown as KLineChart;
-  },
-  onChartLoad(fn: (chart: KLineChart) => any): void {
-
-  }
-});
 </script>
 <template>
-  <KlineContextMenu :menus="menuOptions">
+  <lazy-kline-context-menu >
     <template #default="{onContextMenu}">
       <div @contextmenu.prevent.stop="onContextMenu"
            ref="chartContainerRef"
@@ -27,17 +20,17 @@ defineExpose<KLineChartsRootRef>({
           <KlineChartsIndicator name="VOL" :args="{isStack:true}"/>
           <KlineChartsDataProvider/>
         </KlineChartsRoot>
-        <ui-floating-action-button>
-          <ul class="p-12px bg-white flex flex-col items-center gap-12px shadow-lg rounded-6px mb-12px">
-            <li class="" v-for="i in 4">{{ i }}</li>
-          </ul>
-          <template #reference>
-            <div>
-              <u-icon icon="carbon:menu"></u-icon>
-            </div>
-          </template>
-        </ui-floating-action-button>
+        <!--        <ui-floating-action-button>-->
+        <!--          <ul class="p-12px bg-white flex flex-col items-center gap-12px shadow-lg rounded-6px mb-12px">-->
+        <!--            <li class="" v-for="i in 4">{{ i }}</li>-->
+        <!--          </ul>-->
+        <!--          <template #reference>-->
+        <!--            <div>-->
+        <!--              <ui-icon icon="carbon:menu"></ui-icon>-->
+        <!--            </div>-->
+        <!--          </template>-->
+        <!--        </ui-floating-action-button>-->
       </div>
     </template>
-  </KlineContextMenu>
+  </lazy-kline-context-menu>
 </template>

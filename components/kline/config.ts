@@ -1,5 +1,5 @@
 import {type Chart, type DeepPartial, type Styles, TooltipShowRule, TooltipShowType} from "klinecharts";
-import {ref, Ref, watchEffect} from "vue";
+import {ref, type Ref, watchEffect} from "vue";
 
 const defaultTheme = {
     // 网格线

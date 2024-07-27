@@ -61,9 +61,10 @@ const textInput: OverlayTemplate = {
                 type: 'text',
                 attrs: texts,
                 styles: {color: '#000', fontSize: 12, fontWeight: 'bold'}
-            }
+            },
+
         ];
-    }
+    },
 };
 
 export default textInput;

@@ -10,17 +10,20 @@ export default defineNuxtConfig({
         '@vueuse/nuxt',
         'nuxt-swiper',
         'nuxt-bezier',
-        '@nuxtjs/i18n',
         "nuxtjs-naive-ui",
         "@nuxt/ui",
     ],
+
+
     imports: {
         dirs: ['stores'],
         global: true,
         autoImport: true,
         scan: false
     },
-
+    experimental: {
+        renderJsonPayloads: false
+    },
     typescript: {
         shim: false,
         typeCheck: false
@@ -72,18 +75,18 @@ export default defineNuxtConfig({
         viewer: false,
     },
     unocss: {},
-    i18n: {
-        langDir: './locales',
-        locales: [
-            {
-                code: 'zh',
-                dir: 'ltr',
-                file: 'zh.json',
-                name: '中文',
-            },
-
-        ]
-    },
+//    i18n: {
+//        langDir: './locales',
+//        locales: [
+//            {
+//                code: 'zh',
+//                dir: 'ltr',
+//                file: 'zh.json',
+//                name: '中文',
+//            },
+//
+//        ]
+//    },
     build: {
         transpile: ['klinecharts', 'd3'],
     },
