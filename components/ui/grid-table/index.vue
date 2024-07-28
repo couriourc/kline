@@ -17,8 +17,12 @@ console.log($fetcher);
 
 <template>
   <d-table :data="data"
-           table-height="98vh">
+           table-height="98vh"
 
-    <d-column v-for="column in columns" v-bind="column" :key="column.field"/>
+  >
+
+    <d-column v-for="column in columns" v-bind="column" :key="column.field" fix-header >
+
+    </d-column>
   </d-table>
 </template>

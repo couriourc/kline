@@ -1,20 +1,12 @@
 import type {KlineChartStoreState} from "~/stores/interfaces";
 import {defineStore} from 'pinia';
 import {shallowRef, triggerRef} from "vue";
-import type {DropdownItem} from "#ui/types";
 import executeCommand from "~/components/kline/commands";
 
 export const useKlineChartStore = defineStore<"KlineChartStoreState", KlineChartStoreState>(
     "KlineChartStoreState", () => {
         const _overlays = shallowRef([]);
         const _asides = shallowRef([
-            [
-                {
-                    avatar: {
-                        src: 'https://avatars.githubusercontent.com/u/739984?v=4'
-                    },
-                }
-            ],
             [
                 {
                     icon: 'icon-chart',
@@ -27,16 +19,18 @@ export const useKlineChartStore = defineStore<"KlineChartStoreState", KlineChart
                     ]
                 },
                 {
-                    icon: 'icon-beans',
+                    icon: 'clear-style',
                     children: [
                         [{
-                            label: 'Kline',
-                            icon: 'icon-chart',
+                            label: '清除标记',
+                            icon: 'icon-text',
+                            type: 'clear',
+
                         }]
                     ]
                 },
             ]
-        ] as DropdownItem[][]);
+        ] as unknown as KlineChartStoreState['asides']);
 
         return {
             overlays: _overlays,
@@ -45,14 +39,11 @@ export const useKlineChartStore = defineStore<"KlineChartStoreState", KlineChart
                 overlays.map((overlay, index) => {
                     _overlays.value.push(overlay);
                     overlay.onRemoved = (info) => {
-                        console.log(`[🪪]info-->`, info);
-
                         overlays.splice(_overlays.value.indexOf(overlay), 1);
                         triggerRef(_overlays);
                         return true;
                     };
                 });
-
                 return triggerRef(_overlays);
             },
             removeOverlays(overlay) {
@@ -65,13 +56,21 @@ export const useKlineChartStore = defineStore<"KlineChartStoreState", KlineChart
                 if (!info.type) {
                     return;
                 }
-                executeCommand("createOverlay", {
-                    name: 'textInput',
-                    onRightClick(info) {
-                        console.log(info);
-                        return true;
-                    }
-                });
+                switch (info.type) {
+                    case 'clear':
+                        _overlays.value.forEach((overlay) => executeCommand("removeOverlay", overlay));
+                        break;
+                    default:
+                        executeCommand("createOverlay", {
+                            name: 'textInput',
+                            onRightClick(info) {
+                                console.log(info);
+                                return true;
+                            }
+                        });
+
+                }
+
             }
         };
     });

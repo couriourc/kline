@@ -28,7 +28,7 @@
     "axios": "^1.7.2",
     "d3": "^7.9.0",
     "fabric": "^6.0.2",
-    "klinecharts": "^9.8.10",
+    "klinecharts": "workspace:^",
     "nuxt": "^3.12.3",
     "nuxtjs-naive-ui": "^1.0.2",
     "radash": "^12.1.0",

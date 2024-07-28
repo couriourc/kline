@@ -24,7 +24,6 @@ const links = [
 ];
 
 function handleSelectTab(link) {
-  console.log(link);
   router.push(link.href);
 }
 </script>

@@ -16,5 +16,4 @@ const store = useKlineChartStore();
       </d-content>
     </d-layout>
   </d-layout>
-
 </template>

@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import {buildLocalIconNames} from "./assets/scripts/buildIcons";
 
+//@ts-ignore
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: false},
@@ -26,7 +27,8 @@ export default defineNuxtConfig({
     },
     typescript: {
         shim: false,
-        typeCheck: false
+        typeCheck: false,
+        strict: false,
     },
     hooks: {
         'build:before': () => {
@@ -63,7 +65,6 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             apiBase: '', // can be overridden by NUXT_PUBLIC_API_BASE environment variable
-            apiSecret: '', // can be overridden by NUXT_API_SECRET environment variable
         }
     },
     tailwindcss: {
@@ -122,8 +123,5 @@ export default defineNuxtConfig({
     },
     future: {
         compatibilityVersion: 4
-    },
-    typescript: {
-        strict: false
     },
 });

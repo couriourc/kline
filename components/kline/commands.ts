@@ -99,7 +99,8 @@ const commands = {
     createOverlay,
     removeOverlay,
     resize,
-    getOverlayById
+    getOverlayById,
+
 };
 export default function executeCommand<T extends keyof typeof commands>(
     type: T,
